@@ -1,0 +1,19 @@
+name: Maintenance checks
+on:
+    pull_request:
+        paths:
+            - '.github/workflows/**'
+            - 'src/**'
+            - 'build.gradle.kts'
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-java@v4
+              with:
+                  java-version: '17'
+                  distribution: 'temurin'
+
+            # Don't fail on empty include (not tracked by git)
+            - run: ./gradlew --no-daemon build
