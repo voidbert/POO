@@ -1,0 +1,8 @@
+# Gradle internal files and compiled code
+.gradle
+build
+
+# Files internal to code editors and operating systems
+.vscode
+.idea
+.DS_Store
