@@ -5,22 +5,14 @@ and activity records.
 
 ### Running the application
 
-The application can be built by running:
-
-```console
-$ ./gradlew build
-```
-
-The application can be run with:
+The application can be built and run wit the following command:
 
 ```console
 $ ./gradlew run
 ```
 
-For developers, unit tests and documentation can be generated with the following commands,
-respectively:
+For developers, the following commands may be useful:
 
-```console
-$ ./gradlew test
-$ ./gradlew javadoc
-```
+ - Run unit tests: `./gradlew test`
+ - Generate documentation: `./gradlew javadoc`
+ - Format code: `gradle spotlessApply`
