@@ -3,6 +3,11 @@ package org.example.activity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.AdvancedUser;
@@ -34,5 +39,25 @@ public class ActivityPushUpTest {
         assertEquals(
                 this.pushUp.toString(),
                 "ActivityPushUp(executionTime = \"PT15M\", executionDate = \"2030-12-25T00:00\", bpm = 110, numberOfReps = 70)");
+    }
+
+    @Test
+    public void testSerialize() {
+        try {
+            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+            objectOutputStream.writeObject(this.pushUp);
+
+            byte bytes[] = byteOutputStream.toByteArray();
+            ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+
+            Activity read = (Activity) objectInputStream.readObject();
+            assertEquals(read, this.pushUp);
+        } catch (IOException e) {
+            assertTrue(false);
+        } catch (ClassNotFoundException e) {
+            assertTrue(false);
+        }
     }
 }

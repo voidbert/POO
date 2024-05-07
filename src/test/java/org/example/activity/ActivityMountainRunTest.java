@@ -3,6 +3,11 @@ package org.example.activity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.BeginnerUser;
@@ -35,5 +40,25 @@ public class ActivityMountainRunTest {
         assertEquals(
                 this.mountainRun.toString(),
                 "ActivityMountainRun(executionTime = \"PT2H\", executionDate = \"2030-12-25T00:00\", bpm = 69, distanceToTraverse = 20.000, altimetry = 0.800)");
+    }
+
+    @Test
+    public void testSerialize() {
+        try {
+            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+            objectOutputStream.writeObject(this.mountainRun);
+
+            byte bytes[] = byteOutputStream.toByteArray();
+            ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+
+            Activity read = (Activity) objectInputStream.readObject();
+            assertEquals(read, this.mountainRun);
+        } catch (IOException e) {
+            assertTrue(false);
+        } catch (ClassNotFoundException e) {
+            assertTrue(false);
+        }
     }
 }
