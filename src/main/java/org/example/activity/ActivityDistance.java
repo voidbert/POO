@@ -18,6 +18,7 @@ package org.example.activity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** A distance activity that can be executed by an user. */
@@ -91,6 +92,12 @@ public abstract class ActivityDistance extends Activity {
         ActivityDistance activity = (ActivityDistance) object;
         return (super.equals(activity)
                 && this.distanceToTraverse == activity.getDistanceToTraverse());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                Integer.valueOf(super.hashCode()), Double.valueOf(this.distanceToTraverse));
     }
 
     public abstract ActivityDistance clone();

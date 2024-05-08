@@ -18,6 +18,7 @@ package org.example.activity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** A repetition activity that can be executed by an user. */
@@ -87,6 +88,11 @@ public abstract class ActivityRepetition extends Activity {
 
         ActivityRepetition activity = (ActivityRepetition) object;
         return (super.equals(activity) && this.numberOfReps == activity.getNumberOfReps());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.numberOfReps));
     }
 
     public abstract ActivityRepetition clone();

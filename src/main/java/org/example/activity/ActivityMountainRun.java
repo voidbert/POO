@@ -18,6 +18,7 @@ package org.example.activity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** A mountain run activity that can be executed by an user. */
@@ -77,6 +78,11 @@ public class ActivityMountainRun extends ActivityAltimetryDistance {
     @Override
     public ActivityMountainRun clone() {
         return new ActivityMountainRun(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), this.getClass());
     }
 
     @Override

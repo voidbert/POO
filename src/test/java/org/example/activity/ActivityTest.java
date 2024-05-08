@@ -16,8 +16,10 @@
 package org.example.activity;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -74,5 +76,26 @@ public class ActivityTest {
                 () -> {
                     this.activity.setExecutionTime(Duration.ofSeconds(1));
                 });
+    }
+
+    @Test
+    public void overlaps() {
+        final Activity a1 =
+                new ActivityPushUp(
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 69, 15);
+        final Activity a2 =
+                new ActivityPushUp(
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 10), 69, 15);
+        final Activity a3 =
+                new ActivityPushUp(
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 20), 69, 15);
+
+        assertTrue(a1.overlaps(a1));
+        assertTrue(a1.overlaps(a2));
+        assertTrue(a2.overlaps(a1));
+        assertFalse(a3.overlaps(a1));
+        assertFalse(a1.overlaps(a3));
+        assertTrue(a2.overlaps(a3));
+        assertTrue(a3.overlaps(a2));
     }
 }

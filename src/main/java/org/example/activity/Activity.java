@@ -19,10 +19,11 @@ package org.example.activity;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** An exercise activity that can be executed by an user. */
-public abstract class Activity implements Serializable {
+public abstract class Activity implements Serializable, Comparable {
     /** Duration of the activity. */
     private Duration executionTime;
 
@@ -127,6 +128,22 @@ public abstract class Activity implements Serializable {
     }
 
     /**
+     * Checks if this activity overlaps another activity.
+     *
+     * @param activity Activity to be checked for overlapping.
+     * @return Whether if this activity overlaps another activity.
+     */
+    public boolean overlaps(Activity activity) {
+        LocalDateTime thisStart = this.getExecutionDate();
+        LocalDateTime thisEnd = thisStart.plusSeconds(this.executionTime.toSeconds());
+        LocalDateTime activityStart = activity.getExecutionDate();
+        LocalDateTime activityEnd =
+                activityStart.plusSeconds(activity.getExecutionTime().toSeconds());
+
+        return thisStart.isBefore(activityEnd) && activityStart.isBefore(thisEnd);
+    }
+
+    /**
      * Counts the calories that the user executing this activity consumes.
      *
      * @param user User executing this activity.
@@ -149,6 +166,38 @@ public abstract class Activity implements Serializable {
         return (this.executionTime.equals(activity.getExecutionTime())
                 && this.executionDate.equals(activity.getExecutionDate())
                 && this.bpm == activity.getBPM());
+    }
+
+    /**
+     * Calculates the hash code of this activity.
+     *
+     * @return The hash code of this activity.
+     */
+    public int hashCode() {
+        return Objects.hash(this.executionTime, this.executionDate, Integer.valueOf(this.bpm));
+    }
+
+    /**
+     * Compares this activity to another one, sorting them by execution date.
+     *
+     * @param obj Object to be compared to this activity.
+     * @return 0 if the activities have the same date, 1 if
+     */
+    public int compareTo(Object obj) {
+        Activity activity = (Activity) obj; /* This is supposed to fail with exception if need be */
+
+        int dateCompare = this.executionDate.compareTo(activity.getExecutionDate());
+        int durationCompare = this.executionTime.compareTo(activity.getExecutionTime());
+        if (dateCompare != 0) {
+            return dateCompare;
+        } else if (durationCompare != 0) {
+            return durationCompare;
+        } else if (this.equals(obj)) {
+            return 0;
+        } else {
+            /* Just don't return 0 if the activities are different. Ignore order */
+            return 1;
+        }
     }
 
     /**

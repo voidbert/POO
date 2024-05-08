@@ -18,6 +18,7 @@ package org.example.activity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** A distance activity with altimetry that can be executed by an user. */
@@ -93,6 +94,11 @@ public abstract class ActivityAltimetryDistance extends ActivityDistance {
 
         ActivityAltimetryDistance activity = (ActivityAltimetryDistance) object;
         return (super.equals(activity) && this.altimetry == activity.getAltimetry());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(this.altimetry));
     }
 
     public abstract ActivityAltimetryDistance clone();

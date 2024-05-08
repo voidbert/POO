@@ -18,6 +18,7 @@ package org.example.activity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** A weight lifting activity that can be executed by an user. */
@@ -70,6 +71,11 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted implements
     @Override
     public ActivityWeightLifting clone() {
         return new ActivityWeightLifting(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), this.getClass());
     }
 
     @Override

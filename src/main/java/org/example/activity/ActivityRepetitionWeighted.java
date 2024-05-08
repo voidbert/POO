@@ -18,6 +18,7 @@ package org.example.activity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.example.user.User;
 
 /** A repetetion activity with weights that can be executed by an user. */
@@ -93,6 +94,11 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
 
         ActivityRepetitionWeighted activity = (ActivityRepetitionWeighted) object;
         return (super.equals(activity) && this.weightsHeft == activity.getWeightsHeft());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(this.weightsHeft));
     }
 
     public abstract ActivityRepetitionWeighted clone();
