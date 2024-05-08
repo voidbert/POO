@@ -20,17 +20,33 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** A push-up activity that can be executed by an user. */
 public class ActivityPushUp extends ActivityRepetition {
+    /** Creates a new empty push-up activity. */
     public ActivityPushUp() {
         super();
     }
 
+    /**
+     * Creates a new push-up activity from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @param numberOfReps Number of repetitions in a set.
+     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
+     */
     public ActivityPushUp(
             Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps) {
 
         super(executionTime, executionDate, bpm, numberOfReps);
     }
 
+    /**
+     * Copy constructor of a push-up activity.
+     *
+     * @param activity Activity to be copied.
+     */
     public ActivityPushUp(ActivityPushUp activity) {
         super(activity);
     }

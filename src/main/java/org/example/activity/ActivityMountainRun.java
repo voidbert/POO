@@ -20,21 +20,39 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** A mountain run activity that can be executed by an user. */
 public class ActivityMountainRun extends ActivityAltimetryDistance {
+    /** Creates a new empty mountain run activity. */
     public ActivityMountainRun() {
         super();
     }
 
+    /**
+     * Creates a new mountain run activity from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
+     * @param altimetry Altimetry difficulty level.
+     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     * @throws IllegalArgumentException <code>altimetry</code> isn't in [0.0; 1.0].
+     */
     public ActivityMountainRun(
             Duration executionTime,
-            LocalDateTime exexutionDate,
+            LocalDateTime executionDate,
             int bpm,
             double distanceToTraverse,
             double altimetry) {
 
-        super(executionTime, exexutionDate, bpm, distanceToTraverse, altimetry);
+        super(executionTime, executionDate, bpm, distanceToTraverse, altimetry);
     }
 
+    /**
+     * Copy constructor of a mountain run activity.
+     *
+     * @param activity Activity to be copied.
+     */
     public ActivityMountainRun(ActivityMountainRun activity) {
         super(activity);
     }

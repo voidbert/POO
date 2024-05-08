@@ -20,14 +20,26 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** A distance activity that can be executed by an user. */
 public abstract class ActivityDistance extends Activity {
-    private double distanceToTraverse; /* In Kilometers */
+    /** Distance of route to be traversed, in kilometers. */
+    private double distanceToTraverse;
 
+    /** Creates a new empty distance activity. */
     public ActivityDistance() {
         super();
         this.distanceToTraverse = 1.0;
     }
 
+    /**
+     * Creates a new distance activity from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
+     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     */
     public ActivityDistance(
             Duration executionTime,
             LocalDateTime executionDate,
@@ -38,15 +50,31 @@ public abstract class ActivityDistance extends Activity {
         this.setDistanceToTraverse(distanceToTraverse);
     }
 
+    /**
+     * Copy constructor of a distance activity.
+     *
+     * @param activity Activity to be copied.
+     */
     public ActivityDistance(ActivityDistance activity) {
         super(activity);
         this.distanceToTraverse = activity.getDistanceToTraverse();
     }
 
+    /**
+     * Gets the distance to traverse of this activity.
+     *
+     * @return The distance to traverese of this activity.
+     */
     public double getDistanceToTraverse() {
         return this.distanceToTraverse;
     }
 
+    /**
+     * Sets the distance to traverse of this activity.
+     *
+     * @param distanceToTraverse The distance to traverse of this activity, in kilometers.
+     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     */
     public void setDistanceToTraverse(double distanceToTraverse) {
         if (distanceToTraverse <= 0)
             throw new IllegalArgumentException("Distance to traverse should be a positive number!");

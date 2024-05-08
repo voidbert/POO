@@ -16,11 +16,13 @@
 
 package org.example.user;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-class UserTest {
+public class UserTest {
     @Test
     public void testEquals() {
         final User beginner =
@@ -33,5 +35,24 @@ class UserTest {
         assertNotEquals(beginner, intermediate);
         assertNotEquals(beginner, advanced);
         assertNotEquals(intermediate, advanced);
+    }
+
+    public void setAverageBPM() {
+        User user = new IntermediateUser(1, "José Lopes", "UMinho", "a104541@alunos.uminho.pt", 90);
+
+        assertThrows(
+                RuntimeException.class,
+                () -> {
+                    user.setAverageBPM(0);
+                });
+        assertThrows(
+                RuntimeException.class,
+                () -> {
+                    user.setAverageBPM(-1);
+                });
+        assertDoesNotThrow(
+                () -> {
+                    user.setAverageBPM(60);
+                });
     }
 }

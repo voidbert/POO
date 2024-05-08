@@ -20,11 +20,22 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** A track run activity that can be executed by an user. */
 public class ActivityTrackRun extends ActivityDistance implements ActivityHard {
+    /** Creates a new empty track run activity. */
     public ActivityTrackRun() {
         super();
     }
 
+    /**
+     * Creates a new track run activity from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
+     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     */
     public ActivityTrackRun(
             Duration executionTime,
             LocalDateTime executionDate,
@@ -34,6 +45,11 @@ public class ActivityTrackRun extends ActivityDistance implements ActivityHard {
         super(executionTime, executionDate, bpm, distanceToTraverse);
     }
 
+    /**
+     * Copy constructor of a track run activity.
+     *
+     * @param activity Activity to be copied.
+     */
     public ActivityTrackRun(ActivityTrackRun activity) {
         super(activity);
     }

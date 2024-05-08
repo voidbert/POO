@@ -20,11 +20,24 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** A weight lifting activity that can be executed by an user. */
 public class ActivityWeightLifting extends ActivityRepetitionWeighted implements ActivityHard {
+    /** Creates a new empty weight lifting activity. */
     public ActivityWeightLifting() {
         super();
     }
 
+    /**
+     * Creates a new weight lifting activity from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @param numberOfReps Number of repetitions in a set.
+     * @param weightsHeft Heft of the weigths, in kilograms.
+     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
+     * @throws IllegalArgumentException <code>weightsHeft</code> isn't a positive number.
+     */
     public ActivityWeightLifting(
             Duration executionTime,
             LocalDateTime executionDate,
@@ -35,6 +48,11 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted implements
         super(executionTime, executionDate, bpm, numberOfReps, weightsHeft);
     }
 
+    /**
+     * Copy constructor of a weight lifiting activity.
+     *
+     * @param activity Activity to be copied.
+     */
     public ActivityWeightLifting(ActivityWeightLifting activity) {
         super(activity);
     }

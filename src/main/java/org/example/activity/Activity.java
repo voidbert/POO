@@ -21,51 +21,104 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** An exercise activity that can be executed by an user. */
 public abstract class Activity implements Serializable {
+    /** Duration of the activity. */
     private Duration executionTime;
+
+    /** Time when the activity was / will be executed. */
     private LocalDateTime executionDate;
+
+    /** Cardiac rhythm of the user while executing this activity. */
     private int bpm;
 
+    /** Creates a new empty activity. */
     public Activity() {
         this.executionTime = Duration.ZERO;
         this.executionDate = LocalDateTime.MIN;
         this.bpm = 0;
     }
 
-    public Activity(Duration executionTime, LocalDateTime exexutionDate, int bpm) {
+    /**
+     * Creates a new activity from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @throws IllegalArgumentException <code>executionTime</code> lasts less than a second.
+     * @throws IllegalArgumentException <code>bpm</code> isn't positive.
+     */
+    public Activity(Duration executionTime, LocalDateTime executionDate, int bpm) {
         this.setExecutionTime(executionTime);
-        this.executionDate = exexutionDate;
+        this.executionDate = executionDate;
         this.setBPM(bpm);
     }
 
+    /**
+     * Copy constructor of an activity.
+     *
+     * @param activity Activity to be copied.
+     */
     public Activity(Activity activity) {
         this.executionTime = activity.getExecutionTime();
         this.executionDate = activity.getExecutionDate();
         this.bpm = activity.getBPM();
     }
 
+    /**
+     * Gets the duration of this activity.
+     *
+     * @return The duration of this activity.
+     */
     public Duration getExecutionTime() {
         return this.executionTime;
     }
 
+    /**
+     * Gets the time when this activity was / will be executed.
+     *
+     * @return The time when this activity was / will be executed.
+     */
     public LocalDateTime getExecutionDate() {
         return this.executionDate;
     }
 
+    /**
+     * Gets the cardiac rhythm of the user while executing this activity.
+     *
+     * @return The cardiac rhythm of the user while executing this activity.
+     */
     public int getBPM() {
         return this.bpm;
     }
 
+    /**
+     * Sets the duration of this activity.
+     *
+     * @param executionTime The duration of this activity.
+     * @throws IllegalArgumentException <code>executionTime</code> lasts less than a second.
+     */
     public void setExecutionTime(Duration executionTime) {
         if (executionTime.toSeconds() == 0)
             throw new IllegalArgumentException("An exercise should last at least one second long!");
         this.executionTime = executionTime;
     }
 
+    /**
+     * Sets the time when this activity was / will be executed.
+     *
+     * @param executionDate The time when this activity was / will be executed.
+     */
     public void setExecutionDate(LocalDateTime executionDate) {
         this.executionDate = executionDate;
     }
 
+    /**
+     * Sets the cardiac rhythm of the user while executing this activity.
+     *
+     * @param bpm the cardiac rhythm of the user while executing this activity.
+     * @throws IllegalArgumentException <code>bpm</code> isn't positive.
+     */
     public void setBPM(int bpm) throws IllegalArgumentException {
         if (bpm <= 0)
             throw new IllegalArgumentException(
@@ -73,20 +126,42 @@ public abstract class Activity implements Serializable {
         this.bpm = bpm;
     }
 
+    /**
+     * Counts the calories that the user executing this activity consumes.
+     *
+     * @param user User executing this activity.
+     * @return The calories that the user executing this activity consumes.
+     */
     public abstract double countCalories(User user);
 
+    /**
+     * Checks if this activity is equal to another object.
+     *
+     * @param obj Object to be compared with this activity.
+     * @return Whether <code>this</code> is equal to <code>obj</code>.
+     */
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || (this.getClass() != object.getClass())) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || (this.getClass() != obj.getClass())) return false;
 
-        Activity activity = (Activity) object;
+        Activity activity = (Activity) obj;
         return (this.executionTime.equals(activity.getExecutionTime())
                 && this.executionDate.equals(activity.getExecutionDate())
                 && this.bpm == activity.getBPM());
     }
 
+    /**
+     * Creates a deep copy of this activity.
+     *
+     * @return A deep copy of this activity.
+     */
     public abstract Activity clone();
 
+    /**
+     * Creates a debug string representation of this activity.
+     *
+     * @return A debug string representation of this activity.
+     */
     public abstract String toString();
 }

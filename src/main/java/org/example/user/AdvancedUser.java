@@ -16,15 +16,31 @@
 
 package org.example.user;
 
+/** An advanced user of the fitness application. */
 public class AdvancedUser extends User {
+    /** Creates a new empty advanced user. */
     public AdvancedUser() {
         super();
     }
 
+    /**
+     * Creates an advanced user from the value of its fields.
+     *
+     * @param code Identifier code of the user.
+     * @param name Full name of the user.
+     * @param address Street address of the user.
+     * @param email Email address of the user.
+     * @param averageBPM Average cardiac rhythm of the user when exercising.
+     */
     public AdvancedUser(long code, String name, String address, String email, int averageBPM) {
         super(code, name, address, email, averageBPM);
     }
 
+    /**
+     * Copy constructor of an advanced user.
+     *
+     * @param user Advanced user to be copied.
+     */
     public AdvancedUser(AdvancedUser user) {
         super(user);
     }
@@ -33,7 +49,7 @@ public class AdvancedUser extends User {
         return 1.5;
     }
 
-    public User clone() {
+    public AdvancedUser clone() {
         return new AdvancedUser(this);
     }
 

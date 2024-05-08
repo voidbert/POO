@@ -16,11 +16,22 @@
 
 package org.example;
 
+/** The application to be built */
 public class Application {
+    /**
+     * Gets a nice greeting message!
+     *
+     * @return A greeting message.
+     */
     public String getGreeting() {
         return "Hello World!";
     }
 
+    /**
+     * The entry point to the application program.
+     *
+     * @param args Application startup arguments.
+     */
     public static void main(String[] args) {
         System.out.println(new Application().getGreeting());
     }

@@ -16,15 +16,31 @@
 
 package org.example.user;
 
+/** A beginner user of the fitness application. */
 public class BeginnerUser extends User {
+    /** Creates a new beginner intermediate user. */
     public BeginnerUser() {
         super();
     }
 
+    /**
+     * Creates a beginner user from the value of its fields.
+     *
+     * @param code Identifier code of the user.
+     * @param name Full name of the user.
+     * @param address Street address of the user.
+     * @param email Email address of the user.
+     * @param averageBPM Average cardiac rhythm of the user when exercising.
+     */
     public BeginnerUser(long code, String name, String address, String email, int averageBPM) {
         super(code, name, address, email, averageBPM);
     }
 
+    /**
+     * Copy constructor of a beginner user.
+     *
+     * @param user Beginner user to be copied.
+     */
     public BeginnerUser(BeginnerUser user) {
         super(user);
     }
@@ -33,7 +49,7 @@ public class BeginnerUser extends User {
         return 1.0;
     }
 
-    public User clone() {
+    public BeginnerUser clone() {
         return new BeginnerUser(this);
     }
 

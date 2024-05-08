@@ -28,7 +28,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import org.junit.jupiter.api.Test;
 
-class IntermediateUserTest {
+public class IntermediateUserTest {
     private final User reference =
             new IntermediateUser(1, "Humberto Gomes", "UMinho", "a104348@alunos.uminho.pt", 80);
 

@@ -20,34 +20,64 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.User;
 
+/** A distance activity with altimetry that can be executed by an user. */
 public abstract class ActivityAltimetryDistance extends ActivityDistance {
+    /** Altimetry difficulty value. */
     private double altimetry;
 
+    /** Creates a new empty distance activity with altimetry. */
     public ActivityAltimetryDistance() {
         super();
         this.altimetry = 0.0;
     }
 
+    /**
+     * Creates a new distance activity with altimetry from the value of its fields.
+     *
+     * @param executionTime Duration of the activity.
+     * @param executionDate When the activity was / will be executed.
+     * @param bpm Cardiac rhythm of the user while executing this activity.
+     * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
+     * @param altimetry Altimetry difficulty level.
+     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     * @throws IllegalArgumentException <code>altimetry</code> isn't in [0.0; 1.0].
+     */
     public ActivityAltimetryDistance(
             Duration executionTime,
-            LocalDateTime exexutionDate,
+            LocalDateTime executionDate,
             int bpm,
             double distanceToTraverse,
             double altimetry) {
 
-        super(executionTime, exexutionDate, bpm, distanceToTraverse);
+        super(executionTime, executionDate, bpm, distanceToTraverse);
         this.setAltimetry(altimetry);
     }
 
+    /**
+     * Copy constructor of a distance activity with altimetry.
+     *
+     * @param activity Activity to be copied.
+     */
     public ActivityAltimetryDistance(ActivityAltimetryDistance activity) {
         super(activity);
         this.altimetry = activity.getAltimetry();
     }
 
+    /**
+     * Gets the altimetry difficulty level of this activity.
+     *
+     * @return The altimetry difficulty level of this activity.
+     */
     public double getAltimetry() {
         return this.altimetry;
     }
 
+    /**
+     * Sets the altimetry difficulty level of this activity.
+     *
+     * @param altimetry Altimetry difficulty level of this activity.
+     * @throws IllegalArgumentException <code>altimetry</code> isn't in [0.0; 1.0].
+     */
     public void setAltimetry(double altimetry) {
         if (altimetry < 0.0 || altimetry > 1.0)
             throw new IllegalArgumentException("Altimetry of activity must be in [0.0; 1.0]!");

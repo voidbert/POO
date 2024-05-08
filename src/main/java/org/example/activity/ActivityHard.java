@@ -16,4 +16,5 @@
 
 package org.example.activity;
 
+/** A label that identifies hard activities. */
 public interface ActivityHard {}
