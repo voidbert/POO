@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.IntermediateUser;
+import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class ActivityTrackRunTest {
@@ -30,7 +31,13 @@ public class ActivityTrackRunTest {
     @Test
     public void countCalories() {
         final IntermediateUser intermediate =
-                new IntermediateUser(1, "José Lopes", "UMinho", "a104541@alunos.uminho.pt", 60);
+                new IntermediateUser(
+                        1,
+                        "José Lopes",
+                        "UMinho",
+                        "a104541@alunos.uminho.pt",
+                        60,
+                        new UserActivities());
         assertEquals(this.trackRun.countCalories(intermediate), 2960.0, 0.1);
     }
 

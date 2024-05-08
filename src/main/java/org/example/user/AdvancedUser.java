@@ -16,6 +16,8 @@
 
 package org.example.user;
 
+import org.example.useractivities.UserActivities;
+
 /** An advanced user of the fitness application. */
 public class AdvancedUser extends User {
     /** Creates a new empty advanced user. */
@@ -31,9 +33,16 @@ public class AdvancedUser extends User {
      * @param address Street address of the user.
      * @param email Email address of the user.
      * @param averageBPM Average cardiac rhythm of the user when exercising.
+     * @param activities Activities the user must still execute and has already executed.
      */
-    public AdvancedUser(long code, String name, String address, String email, int averageBPM) {
-        super(code, name, address, email, averageBPM);
+    public AdvancedUser(
+            long code,
+            String name,
+            String address,
+            String email,
+            int averageBPM,
+            UserActivities activities) {
+        super(code, name, address, email, averageBPM, activities);
     }
 
     /**
@@ -55,11 +64,12 @@ public class AdvancedUser extends User {
 
     public String toString() {
         return String.format(
-                "AdvancedUser(code = %d, name = \"%s\", address = \"%s\", email = \"%s\", averageBPM = %d)",
+                "AdvancedUser(code = %d, name = \"%s\", address = \"%s\", email = \"%s\", averageBPM = %d, activities = %s)",
                 this.getCode(),
                 this.getName(),
                 this.getAddress(),
                 this.getEmail(),
-                this.getAverageBPM());
+                this.getAverageBPM(),
+                this.getActivities().toString());
     }
 }

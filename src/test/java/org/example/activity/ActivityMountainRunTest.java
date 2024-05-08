@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.BeginnerUser;
+import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class ActivityMountainRunTest {
@@ -31,7 +32,13 @@ public class ActivityMountainRunTest {
     @Test
     public void countCalories() {
         final BeginnerUser beginner =
-                new BeginnerUser(1, "José Lopes", "UMinho", "a104541@alunos.uminho.pt", 60);
+                new BeginnerUser(
+                        1,
+                        "José Lopes",
+                        "UMinho",
+                        "a104541@alunos.uminho.pt",
+                        60,
+                        new UserActivities());
         assertEquals(this.mountainRun.countCalories(beginner), 3850.2, 0.1);
     }
 

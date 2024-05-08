@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example.useractivites;
+package org.example.useractivities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

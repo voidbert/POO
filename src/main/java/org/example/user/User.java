@@ -17,6 +17,7 @@
 package org.example.user;
 
 import java.io.Serializable;
+import org.example.useractivities.UserActivities;
 
 /** A user of the fitness application. */
 public abstract class User implements Serializable {
@@ -35,6 +36,9 @@ public abstract class User implements Serializable {
     /** Average cardiac rhythm of the user when exercising. */
     private int averageBPM;
 
+    /** Activities the user must still execute and has already executed. */
+    private UserActivities activities;
+
     /** Creates a new empty user. */
     public User() {
         this.code = 0;
@@ -50,13 +54,21 @@ public abstract class User implements Serializable {
      * @param address Street address of the user.
      * @param email Email address of the user.
      * @param averageBPM Average cardiac rhythm of the user when exercising.
+     * @param activities Activities the user must still execute and has already executed.
      */
-    public User(long code, String name, String address, String email, int averageBPM) {
+    public User(
+            long code,
+            String name,
+            String address,
+            String email,
+            int averageBPM,
+            UserActivities activities) {
         this.code = code;
         this.name = name;
         this.address = address;
         this.email = email;
         this.setAverageBPM(averageBPM);
+        this.activities = activities.clone();
     }
 
     /**
@@ -70,6 +82,7 @@ public abstract class User implements Serializable {
         this.address = user.getAddress();
         this.email = user.getEmail();
         this.averageBPM = user.getAverageBPM();
+        this.activities = user.getActivities();
     }
 
     /**
@@ -115,6 +128,15 @@ public abstract class User implements Serializable {
      */
     public int getAverageBPM() {
         return this.averageBPM;
+    }
+
+    /**
+     * Gets the activities the user must still execute and has already executed.
+     *
+     * @return The activities the user must still execute and has already executed.
+     */
+    public UserActivities getActivities() {
+        return this.activities.clone();
     }
 
     /**
@@ -166,6 +188,15 @@ public abstract class User implements Serializable {
     }
 
     /**
+     * Sets this user's collection of activities (completed or not).
+     *
+     * @param The activities the user must still execute and has already executed.
+     */
+    public void setActivities(UserActivities activities) {
+        this.activities = activities.clone();
+    }
+
+    /**
      * Checks if this user is equal to another object.
      *
      * @param obj Object to be compared with this user.
@@ -180,7 +211,8 @@ public abstract class User implements Serializable {
                 && this.name.equals(user.getName())
                 && this.address.equals(user.getAddress())
                 && this.email.equals(user.getEmail())
-                && this.averageBPM == user.getAverageBPM();
+                && this.averageBPM == user.getAverageBPM()
+                && this.activities.equals(user.getActivities());
     }
 
     /**

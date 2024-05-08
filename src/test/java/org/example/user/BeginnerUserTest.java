@@ -26,11 +26,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class BeginnerUserTest {
     private final User reference =
-            new BeginnerUser(1, "Humberto Gomes", "UMinho", "a104348@alunos.uminho.pt", 80);
+            new BeginnerUser(
+                    1,
+                    "Humberto Gomes",
+                    "UMinho",
+                    "a104348@alunos.uminho.pt",
+                    80,
+                    new UserActivities());
 
     @Test
     public void testClone() {
@@ -69,7 +76,7 @@ public class BeginnerUserTest {
     public void testToString() {
         assertEquals(
                 this.reference.toString(),
-                "BeginnerUser(code = 1, name = \"Humberto Gomes\", address = \"UMinho\", email = \"a104348@alunos.uminho.pt\", averageBPM = 80)");
+                "BeginnerUser(code = 1, name = \"Humberto Gomes\", address = \"UMinho\", email = \"a104348@alunos.uminho.pt\", averageBPM = 80, activities = UserActivities(todo = [], done = [], plan = TrainingPlan(activities = {}, repetitions = [])))");
     }
 
     @Test

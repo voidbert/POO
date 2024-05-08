@@ -20,17 +20,36 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class UserTest {
     @Test
     public void testEquals() {
         final User beginner =
-                new BeginnerUser(1, "Humberto Gomes", "UMinho", "a104348@alunos.uminho.pt", 80);
+                new BeginnerUser(
+                        1,
+                        "Humberto Gomes",
+                        "UMinho",
+                        "a104348@alunos.uminho.pt",
+                        80,
+                        new UserActivities());
         final User intermediate =
-                new IntermediateUser(1, "Humberto Gomes", "UMinho", "a104348@alunos.uminho.pt", 80);
+                new IntermediateUser(
+                        1,
+                        "Humberto Gomes",
+                        "UMinho",
+                        "a104348@alunos.uminho.pt",
+                        80,
+                        new UserActivities());
         final User advanced =
-                new AdvancedUser(1, "Humberto Gomes", "UMinho", "a104348@alunos.uminho.pt", 80);
+                new AdvancedUser(
+                        1,
+                        "Humberto Gomes",
+                        "UMinho",
+                        "a104348@alunos.uminho.pt",
+                        80,
+                        new UserActivities());
 
         assertNotEquals(beginner, intermediate);
         assertNotEquals(beginner, advanced);
@@ -38,7 +57,14 @@ public class UserTest {
     }
 
     public void setAverageBPM() {
-        User user = new IntermediateUser(1, "José Lopes", "UMinho", "a104541@alunos.uminho.pt", 90);
+        User user =
+                new IntermediateUser(
+                        1,
+                        "José Lopes",
+                        "UMinho",
+                        "a104541@alunos.uminho.pt",
+                        80,
+                        new UserActivities());
 
         assertThrows(
                 RuntimeException.class,

@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.AdvancedUser;
+import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class ActivityPushUpTest {
@@ -30,7 +31,13 @@ public class ActivityPushUpTest {
     @Test
     public void countCalories() {
         final AdvancedUser advanced =
-                new AdvancedUser(1, "José Lopes", "UMinho", "a104541@alunos.uminho.pt", 50);
+                new AdvancedUser(
+                        1,
+                        "José Lopes",
+                        "UMinho",
+                        "a104541@alunos.uminho.pt",
+                        50,
+                        new UserActivities());
         assertEquals(this.pushUp.countCalories(advanced), 309.4, 0.1);
     }
 

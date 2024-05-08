@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example.useractivites;
+package org.example.useractivities;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.example.user.IntermediateUser;
+import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class ActivityWeightLiftingTest {
@@ -31,7 +32,13 @@ public class ActivityWeightLiftingTest {
     @Test
     public void countCalories() {
         final IntermediateUser intermediate =
-                new IntermediateUser(1, "José Lopes", "UMinho", "a104541@alunos.uminho.pt", 60);
+                new IntermediateUser(
+                        1,
+                        "José Lopes",
+                        "UMinho",
+                        "a104541@alunos.uminho.pt",
+                        60,
+                        new UserActivities());
         assertEquals(this.weightLifting.countCalories(intermediate), 59.1, 0.1);
     }
 
