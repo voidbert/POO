@@ -216,6 +216,18 @@ public abstract class User implements Serializable {
     }
 
     /**
+     * Compares this user to another one, sorting them by identifier code.
+     *
+     * @param obj Object to be compared to this user.
+     * @return 0 if the user have the same code, a positive number if this user has a greater code
+     *     and a negative number otherwise.
+     */
+    public int compareTo(Object obj) {
+        User user = (User) obj; // Purposely fail with exception on bad input
+        return (int) (this.code - user.getCode());
+    }
+
+    /**
      * Calculates the hash code of this user.
      *
      * @return The hash code of this user.
