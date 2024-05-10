@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package org.example.user;
-
-import org.example.useractivities.UserActivities;
+package org.example.fitness;
 
 /** An intermediate user of the fitness application. */
 public class IntermediateUser extends User {
@@ -34,6 +32,7 @@ public class IntermediateUser extends User {
      * @param email Email address of the user.
      * @param averageBPM Average cardiac rhythm of the user when exercising.
      * @param activities Activities the user must still execute and has already executed.
+     * @throws UserException Non-positive <code>averageBPM</code>.
      */
     public IntermediateUser(
             long code,
@@ -41,7 +40,8 @@ public class IntermediateUser extends User {
             String address,
             String email,
             int averageBPM,
-            UserActivities activities) {
+            UserActivities activities)
+            throws UserException {
         super(code, name, address, email, averageBPM, activities);
     }
 
@@ -54,14 +54,17 @@ public class IntermediateUser extends User {
         super(user);
     }
 
+    @Override
     public double getCalorieMultiplier() {
         return 1.25;
     }
 
+    @Override
     public IntermediateUser clone() {
         return new IntermediateUser(this);
     }
 
+    @Override
     public String toString() {
         return String.format(
                 "IntermediateUser(code = %d, name = \"%s\", address = \"%s\", email = \"%s\", averageBPM = %d, activities = %s)",

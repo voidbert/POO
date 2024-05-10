@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
-/** A distance activity with altimetry that can be executed by an user. */
+/** An activity that involves both distance with altimetry. */
 public abstract class ActivityAltimetryDistance extends ActivityDistance {
-    /** Altimetry difficulty value. */
+    /** Altimetry difficulty value ([0.0; 1.0]). */
     private double altimetry;
 
     /** Creates a new empty distance activity with altimetry. */
@@ -40,15 +39,18 @@ public abstract class ActivityAltimetryDistance extends ActivityDistance {
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
      * @param altimetry Altimetry difficulty level.
-     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
-     * @throws IllegalArgumentException <code>altimetry</code> isn't in [0.0; 1.0].
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
+     * @throws ActivityException <code>altimetry</code> not in [0.0; 1.0].
      */
     public ActivityAltimetryDistance(
             Duration executionTime,
             LocalDateTime executionDate,
             int bpm,
             double distanceToTraverse,
-            double altimetry) {
+            double altimetry)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm, distanceToTraverse);
         this.setAltimetry(altimetry);
@@ -77,15 +79,21 @@ public abstract class ActivityAltimetryDistance extends ActivityDistance {
      * Sets the altimetry difficulty level of this activity.
      *
      * @param altimetry Altimetry difficulty level of this activity.
-     * @throws IllegalArgumentException <code>altimetry</code> isn't in [0.0; 1.0].
+     * @throws ActivityException <code>altimetry</code> not in [0.0; 1.0].
      */
-    public void setAltimetry(double altimetry) {
+    public void setAltimetry(double altimetry) throws ActivityException {
         if (altimetry < 0.0 || altimetry > 1.0)
-            throw new IllegalArgumentException("Altimetry of activity must be in [0.0; 1.0]!");
+            throw new ActivityException("Altimetry of activity must be in [0.0; 1.0]!");
         this.altimetry = altimetry;
     }
 
+    @Override
     public abstract double countCalories(User user);
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(this.altimetry));
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -93,15 +101,12 @@ public abstract class ActivityAltimetryDistance extends ActivityDistance {
         if (object == null || (this.getClass() != object.getClass())) return false;
 
         ActivityAltimetryDistance activity = (ActivityAltimetryDistance) object;
-        return (super.equals(activity) && this.altimetry == activity.getAltimetry());
+        return super.equals(activity) && this.altimetry == activity.getAltimetry();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(this.altimetry));
-    }
-
     public abstract ActivityAltimetryDistance clone();
 
+    @Override
     public abstract String toString();
 }

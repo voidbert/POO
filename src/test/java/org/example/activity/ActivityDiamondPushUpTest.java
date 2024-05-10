@@ -22,47 +22,46 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
-public class ActivityWeightLiftingTest {
-    private ActivityWeightLifting weightLifting;
+public class ActivityDiamondPushUpTest {
+    private ActivityDiamondPushUp pushUp;
 
-    public ActivityWeightLiftingTest() throws ActivityException {
-        this.weightLifting =
-                new ActivityWeightLifting(
-                        Duration.ofMinutes(5), LocalDateTime.of(2024, 5, 5, 11, 14), 90, 15, 30);
+    public ActivityDiamondPushUpTest() throws ActivityException {
+        this.pushUp =
+                new ActivityDiamondPushUp(
+                        Duration.ofMinutes(15), LocalDateTime.of(2030, 12, 25, 00, 00), 110, 70);
     }
 
     @Test
     public void countCalories() throws UserException {
-        final IntermediateUser intermediate =
-                new IntermediateUser(
+        final AdvancedUser advanced =
+                new AdvancedUser(
                         1,
                         "José Lopes",
                         "UMinho",
                         "a104541@alunos.uminho.pt",
-                        60,
+                        50,
                         new UserActivities());
-        assertEquals(this.weightLifting.countCalories(intermediate), 59.1, 0.1);
+        assertEquals(this.pushUp.countCalories(advanced), 371.3, 0.1);
     }
 
     @Test
     public void testClone() {
-        ActivityWeightLifting clone = this.weightLifting.clone();
-        assertEquals(this.weightLifting.getExecutionTime(), clone.getExecutionTime());
-        assertEquals(this.weightLifting.getExecutionDate(), clone.getExecutionDate());
-        assertEquals(this.weightLifting.getBPM(), clone.getBPM());
-        assertEquals(this.weightLifting.getNumberOfReps(), clone.getNumberOfReps());
-        assertEquals(this.weightLifting.getWeightsHeft(), clone.getWeightsHeft());
+        final ActivityDiamondPushUp clone = this.pushUp.clone();
+        assertEquals(this.pushUp.getExecutionTime(), clone.getExecutionTime());
+        assertEquals(this.pushUp.getExecutionDate(), clone.getExecutionDate());
+        assertEquals(this.pushUp.getBPM(), clone.getBPM());
+        assertEquals(this.pushUp.getNumberOfReps(), clone.getNumberOfReps());
     }
 
     @Test
     public void testToString() {
         assertEquals(
-                this.weightLifting.toString(),
-                "ActivityWeightLifting(executionTime = \"PT5M\", executionDate = \"2024-05-05T11:14\", bpm = 90, numberOfReps = 15, weightsHeft = 30.00)");
+                this.pushUp.toString(),
+                "ActivityDiamondPushUp(executionTime = \"PT15M\", executionDate = \"2030-12-25T00:00\", bpm = 110, numberOfReps = 70)");
     }
 
     @Test
     public void testSerialize() {
-        TestUtils.serialize(this.weightLifting);
+        TestUtils.serialize(this.pushUp);
     }
 }

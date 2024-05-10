@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.activity;
+
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,34 +26,41 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 public class ActivityDistanceTest {
+    private ActivityDistance distance;
+
+    public ActivityDistanceTest() throws ActivityException {
+        this.distance = new ActivityTrackRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20.0);
+    }
+
     @Test
     public void testEquals() {
-        final ActivityDistance trackRun =
-                new ActivityTrackRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20.0);
+        ActivityDistance clone = this.distance.clone();
+        assertEquals(clone, this.distance);
 
-        ActivityDistance clone = trackRun.clone();
-        assertEquals(clone, trackRun);
+        try {
+            clone.setDistanceToTraverse(14.5);
+        } catch (ActivityException e) {
+        }
+        assertNotEquals(clone, this.distance);
 
-        clone.setDistanceToTraverse(14.5);
-        assertNotEquals(clone, trackRun);
-
-        clone = trackRun.clone();
-        clone.setBPM(100);
-        assertNotEquals(clone, trackRun);
+        clone = this.distance.clone();
+        try {
+            clone.setBPM(100);
+        } catch (ActivityException e) {
+        }
+        assertNotEquals(clone, this.distance);
     }
 
     @Test
     public void setDistanceToTraverse() {
-        ActivityDistance trackRun = new ActivityTrackRun();
-
         assertThrows(
-                RuntimeException.class,
+                ActivityException.class,
                 () -> {
-                    trackRun.setDistanceToTraverse(-1.0);
+                    this.distance.setDistanceToTraverse(-1.0);
                 });
         assertDoesNotThrow(
                 () -> {
-                    trackRun.setDistanceToTraverse(420.0);
+                    this.distance.setDistanceToTraverse(420.0);
                 });
     }
 }

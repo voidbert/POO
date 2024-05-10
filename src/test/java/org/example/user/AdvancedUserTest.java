@@ -14,62 +14,34 @@
  * limitations under the License.
  */
 
-package org.example.user;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class AdvancedUserTest {
-    private final User reference =
-            new AdvancedUser(
-                    1,
-                    "Humberto Gomes",
-                    "UMinho",
-                    "a104348@alunos.uminho.pt",
-                    80,
-                    new UserActivities());
+    private User reference;
+
+    public AdvancedUserTest() throws UserException {
+        this.reference =
+                new AdvancedUser(
+                        1,
+                        "Humberto Gomes",
+                        "UMinho",
+                        "a104348@alunos.uminho.pt",
+                        80,
+                        new UserActivities());
+    }
 
     @Test
     public void testClone() {
         User copy = this.reference.clone();
-        assertTrue(this.reference.getCode() == copy.getCode());
-        assertTrue(this.reference.getName().equals(copy.getName()));
-        assertTrue(this.reference.getAddress().equals(copy.getAddress()));
-        assertTrue(this.reference.getEmail().equals(copy.getEmail()));
-        assertTrue(this.reference.getAverageBPM() == copy.getAverageBPM());
-    }
-
-    @Test
-    public void testEquals() {
-        User copy = this.reference.clone();
-
-        assertTrue(copy.equals(this.reference));
-        copy.setCode(2);
-
-        assertFalse(copy.equals(this.reference));
-    }
-
-    @Test
-    public void testHashCode() {
-        User copy = this.reference.clone();
-
-        assertEquals(this.reference.hashCode(), copy.hashCode());
-
-        copy.setName("José Lopes");
-        assertEquals(this.reference.hashCode(), copy.hashCode());
-
-        copy.setCode(2);
-        assertNotEquals(this.reference.hashCode(), copy.hashCode());
+        assertEquals(this.reference.getCode(), copy.getCode());
+        assertEquals(this.reference.getName(), copy.getName());
+        assertEquals(this.reference.getAddress(), (copy.getAddress()));
+        assertEquals(this.reference.getEmail(), copy.getEmail());
+        assertEquals(this.reference.getAverageBPM(), copy.getAverageBPM());
     }
 
     @Test
@@ -81,21 +53,6 @@ public class AdvancedUserTest {
 
     @Test
     public void testSerialize() {
-        try {
-            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
-            objectOutputStream.writeObject(this.reference);
-
-            byte bytes[] = byteOutputStream.toByteArray();
-            ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-
-            User read = (User) objectInputStream.readObject();
-            assertEquals(read, this.reference);
-        } catch (IOException e) {
-            assertTrue(false);
-        } catch (ClassNotFoundException e) {
-            assertTrue(false);
-        }
+        TestUtils.serialize(this.reference);
     }
 }

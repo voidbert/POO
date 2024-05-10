@@ -1,4 +1,20 @@
-package org.example.activity;
+/*
+ * Copyright 2024 Diogo Costa, Humberto Gomes, José Lopes
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,34 +26,42 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 public class ActivityRepetitionWeightedTest {
+    private ActivityRepetitionWeighted repetitionWeighted;
+
+    public ActivityRepetitionWeightedTest() throws ActivityException {
+        this.repetitionWeighted =
+                new ActivityWeightLifting(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15, 20);
+    }
+
     @Test
     public void testEquals() {
-        final ActivityRepetitionWeighted weightLifting =
-                new ActivityWeightLifting(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15, 20);
+        ActivityRepetitionWeighted clone = this.repetitionWeighted.clone();
+        assertEquals(clone, this.repetitionWeighted);
 
-        ActivityRepetitionWeighted clone = weightLifting.clone();
-        assertEquals(clone, weightLifting);
+        try {
+            clone.setWeightsHeft(10);
+        } catch (ActivityException e) {
+        }
+        assertNotEquals(clone, this.repetitionWeighted);
 
-        clone.setWeightsHeft(10);
-        assertNotEquals(clone, weightLifting);
-
-        clone = weightLifting.clone();
-        clone.setBPM(100);
-        assertNotEquals(clone, weightLifting);
+        clone = this.repetitionWeighted.clone();
+        try {
+            clone.setBPM(100);
+        } catch (ActivityException e) {
+        }
+        assertNotEquals(clone, this.repetitionWeighted);
     }
 
     @Test
     public void setNumberOfReps() {
-        ActivityRepetitionWeighted weightLifting = new ActivityWeightLifting();
-
         assertThrows(
-                RuntimeException.class,
+                ActivityException.class,
                 () -> {
-                    weightLifting.setWeightsHeft(-1);
+                    this.repetitionWeighted.setWeightsHeft(-1);
                 });
         assertDoesNotThrow(
                 () -> {
-                    weightLifting.setWeightsHeft(40);
+                    this.repetitionWeighted.setWeightsHeft(40);
                 });
     }
 }

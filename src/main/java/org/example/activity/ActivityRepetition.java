@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
-/** A repetition activity that can be executed by an user. */
+/** An activity that involves repeating an exercise many times. */
 public abstract class ActivityRepetition extends Activity {
     /** Number of repetitions in a set. */
     private int numberOfReps;
@@ -39,10 +38,13 @@ public abstract class ActivityRepetition extends Activity {
      * @param executionDate When the activity was / will be executed.
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param numberOfReps Number of repetitions in a set.
-     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
     public ActivityRepetition(
-            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps) {
+            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm);
         this.setNumberOfReps(numberOfReps);
@@ -71,15 +73,21 @@ public abstract class ActivityRepetition extends Activity {
      * Sets the number of repetitions of this activity.
      *
      * @param numberOfReps The number of repetitions of this activity.
-     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
+     * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
-    public void setNumberOfReps(int numberOfReps) {
+    public void setNumberOfReps(int numberOfReps) throws ActivityException {
         if (numberOfReps <= 0)
-            throw new IllegalArgumentException("Number of reps should be a positive number!");
+            throw new ActivityException("Number of repetitions should be positive!");
         this.numberOfReps = numberOfReps;
     }
 
+    @Override
     public abstract double countCalories(User user);
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.numberOfReps));
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -87,15 +95,12 @@ public abstract class ActivityRepetition extends Activity {
         if (object == null || (this.getClass() != object.getClass())) return false;
 
         ActivityRepetition activity = (ActivityRepetition) object;
-        return (super.equals(activity) && this.numberOfReps == activity.getNumberOfReps());
+        return super.equals(activity) && this.numberOfReps == activity.getNumberOfReps();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.numberOfReps));
-    }
-
     public abstract ActivityRepetition clone();
 
+    @Override
     public abstract String toString();
 }

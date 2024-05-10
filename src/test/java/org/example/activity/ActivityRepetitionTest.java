@@ -1,4 +1,20 @@
-package org.example.activity;
+/*
+ * Copyright 2024 Diogo Costa, Humberto Gomes, José Lopes
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,34 +26,41 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 public class ActivityRepetitionTest {
+    private ActivityRepetition repetition;
+
+    public ActivityRepetitionTest() throws ActivityException {
+        this.repetition = new ActivityPushUp(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15);
+    }
+
     @Test
     public void testEquals() {
-        final ActivityRepetition pushUp =
-                new ActivityPushUp(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15);
+        ActivityRepetition clone = this.repetition.clone();
+        assertEquals(clone, this.repetition);
 
-        ActivityRepetition clone = pushUp.clone();
-        assertEquals(clone, pushUp);
+        try {
+            clone.setNumberOfReps(40);
+        } catch (ActivityException e) {
+        }
+        assertNotEquals(clone, this.repetition);
 
-        clone.setNumberOfReps(40);
-        assertNotEquals(clone, pushUp);
-
-        clone = pushUp.clone();
-        clone.setBPM(100);
-        assertNotEquals(clone, pushUp);
+        clone = this.repetition.clone();
+        try {
+            clone.setBPM(100);
+        } catch (ActivityException e) {
+        }
+        assertNotEquals(clone, this.repetition);
     }
 
     @Test
     public void setNumberOfReps() {
-        ActivityRepetition pushUp = new ActivityPushUp();
-
         assertThrows(
-                RuntimeException.class,
+                ActivityException.class,
                 () -> {
-                    pushUp.setNumberOfReps(-1);
+                    this.repetition.setNumberOfReps(-1);
                 });
         assertDoesNotThrow(
                 () -> {
-                    pushUp.setNumberOfReps(101);
+                    this.repetition.setNumberOfReps(101);
                 });
     }
 }

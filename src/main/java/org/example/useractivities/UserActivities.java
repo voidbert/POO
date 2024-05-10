@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package org.example.useractivities;
+package org.example.fitness;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import org.example.activity.Activity;
 
 /**
  * The collection of activities a user can execute, composed of completed activities, activities to
@@ -54,10 +52,11 @@ public class UserActivities implements Serializable {
      * @param todo The activities the user still needs to execute.
      * @param done The activities the user has already completed.
      * @param plan The training plan the user is executing.
-     * @throws IllegalArgumentException There are overlapping in <code>todo</code> and / or <code>
+     * @throws ActivityOverlapException There are overlapping in <code>todo</code> and / or <code>
      *     plan</code>. No overlapping checks are performed on <code>done</code>.
      */
-    public UserActivities(SortedSet<Activity> todo, SortedSet<Activity> done, TrainingPlan plan) {
+    public UserActivities(Set<Activity> todo, Set<Activity> done, TrainingPlan plan)
+            throws ActivityOverlapException {
         this();
         this.setTodo(todo);
         this.setDone(done);
@@ -107,12 +106,35 @@ public class UserActivities implements Serializable {
     }
 
     /**
+     * Adds an activity to the collection of activities this user still has to execute.
+     *
+     * @param activity Activity to be added to the collection of activities this user still has to
+     *     execute.
+     * @throws ActivityOverlapException <code>activity</code> overlaps another activity in this
+     *     collection.
+     */
+    public void addActivity(Activity activity) throws ActivityOverlapException {
+        if (this.plan.overlaps(activity)) {
+            throw new ActivityOverlapException();
+        }
+
+        for (Activity a : this.todo) {
+            if (activity.overlaps(a)) {
+                throw new ActivityOverlapException();
+            }
+        }
+
+        this.todo.add(activity.clone());
+    }
+
+    /**
      * Sets the activities this user still has to execute.
      *
      * @param todo The activities this user still has to execute.
-     * @throws IllegalArgumentException There are overlapping activities in <code>todo</code>.
+     * @throws ActivityOverlapException There are overlapping activities in <code>todo</code> or one
+     *     or more activities overlap with the training plan.
      */
-    public void setTodo(SortedSet<Activity> todo) {
+    public void setTodo(Set<Activity> todo) throws ActivityOverlapException {
         SortedSet<Activity> previous = this.getTodo();
         this.todo = new TreeSet<Activity>();
 
@@ -120,19 +142,18 @@ public class UserActivities implements Serializable {
             for (Activity a : todo) {
                 this.addActivity(a);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (ActivityOverlapException e) {
             this.todo = previous;
-            throw new IllegalArgumentException("Overlapping activities!");
+            throw e;
         }
     }
 
     /**
-     * Sets the activities this user still has already executed. No overlapping checks are
-     * performed.
+     * Sets the activities this user has already executed. No overlapping checks are performed.
      *
      * @param done The activities this user has already executed.
      */
-    public void setDone(SortedSet<Activity> done) {
+    public void setDone(Set<Activity> done) {
         this.done =
                 done.stream().map(Activity::clone).collect(Collectors.toCollection(TreeSet::new));
     }
@@ -141,58 +162,35 @@ public class UserActivities implements Serializable {
      * Sets the training plan this user is currently executing.
      *
      * @param plan The training plan this user is currently executing.
-     * @throws IllegalArgumentException There are overlapping activities between <code>todo
+     * @throws ActivityOverlapException There are overlapping activities between <code>plan
      *     </code> and the isolated activities in this collection.
      */
-    public void setTrainingPlan(TrainingPlan plan) {
+    public void setTrainingPlan(TrainingPlan plan) throws ActivityOverlapException {
         this.plan = plan.clone();
-        this.setTodo(this.todo);
-    }
-
-    /**
-     * Adds an activity to the collection of activities this user still has to execute.
-     *
-     * @param activity Activity to be added to the collection of activities this user still has to
-     *     execute.
-     * @throws IllegalArgumentException <code>activity</code> overlaps another activity in this
-     *     collection.
-     */
-    public void addActivity(Activity activity) {
-        if (this.plan.overlaps(activity)) {
-            throw new IllegalArgumentException("Overlapping activities!");
-        }
-
-        for (Activity a : this.todo) {
-            if (activity.overlaps(a)) {
-                throw new IllegalArgumentException("Overlapping activities!");
-            }
-        }
-
-        this.todo.add(activity.clone());
+        this.setTodo(this.getTodo());
     }
 
     /**
      * Removes an activity from the collection of activities yet to be completed.
      *
      * @param index Index of the activity from the collection of activities yet to be completed.
-     * @throws IndexOutOfBoundsException <code>index</code> out of range.
+     * @throws ActivityDoesntExistException <code>index</code> out of range.
      */
-    public void removeActivity(int index) {
-        Activity toRemove = null;
+    public void removeActivity(int index) throws ActivityDoesntExistException {
+        boolean removed = false;
         int count = 0;
         Iterator<Activity> i = this.todo.iterator();
-        while (i.hasNext() && toRemove == null) {
+        while (i.hasNext() && !removed) {
             Activity a = i.next();
             if (count == index) {
-                toRemove = a;
+                i.remove();
+                removed = true;
             }
             count++;
         }
 
-        if (toRemove != null) {
-            this.todo.remove(toRemove);
-        } else {
-            throw new IndexOutOfBoundsException("Activity to remove doesn't exist");
+        if (!removed) {
+            throw new ActivityDoesntExistException();
         }
     }
 
@@ -203,17 +201,17 @@ public class UserActivities implements Serializable {
      * @param goal Timestamp to leap to.
      */
     public void leapForward(LocalDateTime now, LocalDateTime goal) {
-        List<Activity> toRemove = new ArrayList<Activity>();
-        for (Activity a : this.todo) {
-            LocalDateTime end = a.getExecutionDate().plusSeconds(a.getExecutionTime().toSeconds());
+        Iterator<Activity> i = this.todo.iterator();
+        while (i.hasNext()) {
+            Activity a = i.next();
+            LocalDateTime end = a.getEndDate();
 
             if (end.isBefore(goal) || end.isEqual(goal)) {
                 this.done.add(a);
-                toRemove.add(a);
+                i.remove();
             }
         }
 
-        this.todo.removeAll(toRemove);
         this.done.addAll(this.plan.activitiesBetween(now, goal));
     }
 
@@ -222,6 +220,7 @@ public class UserActivities implements Serializable {
      *
      * @return The hash code of this collection of user activities.
      */
+    @Override
     public int hashCode() {
         return Objects.hash(this.todo, this.done, this.plan);
     }
@@ -231,6 +230,7 @@ public class UserActivities implements Serializable {
      *
      * @return Whether two collections of user activities are equal.
      */
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || this.getClass() != obj.getClass()) return false;
@@ -246,6 +246,7 @@ public class UserActivities implements Serializable {
      *
      * @return A deep copy of this collection of user activities.
      */
+    @Override
     public UserActivities clone() {
         return new UserActivities(this);
     }
@@ -255,6 +256,7 @@ public class UserActivities implements Serializable {
      *
      * @return A debug string representation of this collection of user activities.
      */
+    @Override
     public String toString() {
         return String.format(
                 "UserActivities(todo = %s, done = %s, plan = %s)",

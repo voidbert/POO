@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.activity;
+
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,7 +30,59 @@ public class ActivityTest {
     private Activity activity = new ActivityPushUp();
 
     @Test
-    public void testEquals() {
+    public void setBPM() {
+        assertThrows(
+                ActivityException.class,
+                () -> {
+                    this.activity.setBPM(0);
+                });
+        assertThrows(
+                ActivityException.class,
+                () -> {
+                    this.activity.setBPM(-1);
+                });
+        assertDoesNotThrow(
+                () -> {
+                    this.activity.setBPM(60);
+                });
+    }
+
+    @Test
+    public void setExecutionTime() {
+        assertThrows(
+                ActivityException.class,
+                () -> {
+                    this.activity.setExecutionTime(Duration.ofMillis(999));
+                });
+        assertDoesNotThrow(
+                () -> {
+                    this.activity.setExecutionTime(Duration.ofSeconds(1));
+                });
+    }
+
+    @Test
+    public void overlaps() throws ActivityException {
+        final Activity a1 =
+                new ActivityPushUp(
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 70, 15);
+        final Activity a2 =
+                new ActivityPushUp(
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 10), 70, 15);
+        final Activity a3 =
+                new ActivityPushUp(
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 20), 90, 15);
+
+        assertTrue(a1.overlaps(a1));
+        assertTrue(a1.overlaps(a2));
+        assertTrue(a2.overlaps(a1));
+        assertFalse(a3.overlaps(a1));
+        assertFalse(a1.overlaps(a3));
+        assertTrue(a2.overlaps(a3));
+        assertTrue(a3.overlaps(a2));
+    }
+
+    @Test
+    public void testEquals() throws ActivityException {
         final Activity mountainRun =
                 new ActivityMountainRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20, 0.500);
         final Activity pushUp =
@@ -48,54 +101,25 @@ public class ActivityTest {
     }
 
     @Test
-    public void setBPM() {
-        assertThrows(
-                RuntimeException.class,
-                () -> {
-                    this.activity.setBPM(0);
-                });
-        assertThrows(
-                RuntimeException.class,
-                () -> {
-                    this.activity.setBPM(-1);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.activity.setBPM(60);
-                });
-    }
-
-    @Test
-    public void setExecutionTime() {
-        assertThrows(
-                RuntimeException.class,
-                () -> {
-                    this.activity.setExecutionTime(Duration.ofMillis(999));
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.activity.setExecutionTime(Duration.ofSeconds(1));
-                });
-    }
-
-    @Test
-    public void overlaps() {
+    public void compareTo() throws ActivityException {
         final Activity a1 =
                 new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 69, 15);
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 70, 15);
         final Activity a2 =
                 new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 10), 69, 15);
+                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 10), 70, 15);
         final Activity a3 =
                 new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 20), 69, 15);
+                        Duration.ofMinutes(30), LocalDateTime.of(2024, 5, 6, 10, 10), 90, 15);
+        final Activity a4 =
+                new ActivityTrackRun(
+                        Duration.ofMinutes(30), LocalDateTime.of(2024, 5, 6, 10, 10), 90, 10.0);
 
-        assertTrue(a1.overlaps(a1));
-        assertTrue(a1.overlaps(a2));
-        assertTrue(a2.overlaps(a1));
-        assertFalse(a3.overlaps(a1));
-        assertFalse(a1.overlaps(a3));
-        assertTrue(a2.overlaps(a3));
-        assertTrue(a3.overlaps(a2));
+        assertTrue(a1.compareTo(a1) == 0);
+        assertTrue(a1.compareTo(a2) < 0);
+        assertTrue(a2.compareTo(a1) > 0);
+        assertTrue(a1.compareTo(a3) < 0);
+        assertTrue(a1.compareTo(a4) < 0);
+        assertTrue(a3.compareTo(a4) != 0);
     }
 }

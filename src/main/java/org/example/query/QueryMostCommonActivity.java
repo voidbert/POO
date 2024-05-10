@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import org.example.activity.Activity;
-import org.example.user.User;
 
-/** A query that calculates the user that has executed the most activities. */
-public class QueryMostCommonActivity implements Consumer<User> {
+/** A query that determines the activity that was executed the most times. */
+public class QueryMostCommonActivity {
+    /** Relation between activity class names and their number of occurrences. */
     private Map<String, Integer> activities;
 
     /** Creates a new query. */
@@ -38,7 +35,7 @@ public class QueryMostCommonActivity implements Consumer<User> {
     /**
      * Copy constructor of a query.
      *
-     * @param activity Query to be copied.
+     * @param query Query to be copied.
      */
     public QueryMostCommonActivity(QueryMostCommonActivity query) {
         this.activities = query.getActivities();
@@ -50,8 +47,7 @@ public class QueryMostCommonActivity implements Consumer<User> {
      * @return All the activities registered by this query.
      */
     private Map<String, Integer> getActivities() {
-        return this.activities.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        return new HashMap<String, Integer>(this.activities);
     }
 
     /**
@@ -62,12 +58,12 @@ public class QueryMostCommonActivity implements Consumer<User> {
      */
     public Map.Entry<String, Integer> getTopActivity() {
         if (this.activities.isEmpty()) return null;
-        return new AbstractMap.SimpleEntry(
+        return new AbstractMap.SimpleEntry<String, Integer>(
                 Collections.max(this.activities.entrySet(), Map.Entry.comparingByValue()));
     }
 
     /**
-     * Called to feed information about a user.
+     * Consumes a user to get the information about its activities.
      *
      * @param user User to be consumed.
      */
@@ -81,10 +77,21 @@ public class QueryMostCommonActivity implements Consumer<User> {
     }
 
     /**
+     * Calculates the hash code of this query.
+     *
+     * @return The hash code of this query.
+     */
+    @Override
+    public int hashCode() {
+        return this.activities.hashCode();
+    }
+
+    /**
      * Creates a deep copy of this activity.
      *
      * @return A deep copy of this activity.
      */
+    @Override
     public QueryMostCommonActivity clone() {
         return new QueryMostCommonActivity(this);
     }
@@ -94,6 +101,7 @@ public class QueryMostCommonActivity implements Consumer<User> {
      *
      * @return A debug string representation of this query.
      */
+    @Override
     public String toString() {
         return "QueryMostCommonActivity()";
     }

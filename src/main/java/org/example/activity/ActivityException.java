@@ -16,14 +16,15 @@
 
 package org.example.fitness;
 
-/** The application to be built */
-public class Application {
+/** An exception thrown when invalid parameters are used to create or modify activities. */
+public class ActivityException extends Exception {
+
     /**
-     * The entry point to the application program.
+     * Constructor for ActivityException.
      *
-     * @param args Application startup arguments.
+     * @param msg Exception message.
      */
-    public static void main(String[] args) {
-        Fitness fitness = new Fitness();
+    public ActivityException(String msg) {
+        super(msg);
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 /** A label that identifies hard activities. */
 public interface ActivityHard {}

@@ -16,14 +16,19 @@
 
 package org.example.fitness;
 
-/** The application to be built */
-public class Application {
+/** An exception thrown during activity removal when an activity doesn't exist. */
+public class ActivityDoesntExistException extends Exception {
+    /** Constructor for ActivityOverlapException with the default message. */
+    public ActivityDoesntExistException() {
+        super("Activity to remove doesn't exist!");
+    }
+
     /**
-     * The entry point to the application program.
+     * Constructor for ActivityOverlapException.
      *
-     * @param args Application startup arguments.
+     * @param msg Exception message.
      */
-    public static void main(String[] args) {
-        Fitness fitness = new Fitness();
+    public ActivityDoesntExistException(String msg) {
+        super(msg);
     }
 }

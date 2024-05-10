@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package org.example;
+package org.example.fitness;
 
 public class ApplicationTest {}

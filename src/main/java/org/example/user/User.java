@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.example.user;
+package org.example.fitness;
 
 import java.io.Serializable;
-import org.example.useractivities.UserActivities;
 
 /** A user of the fitness application. */
-public abstract class User implements Serializable {
+public abstract class User implements Comparable, Serializable {
     /** Identifier code of the user. */
     private long code;
 
@@ -55,6 +54,7 @@ public abstract class User implements Serializable {
      * @param email Email address of the user.
      * @param averageBPM Average cardiac rhythm of the user when exercising.
      * @param activities Activities the user must still execute and has already executed.
+     * @throws UserException Non-positive <code>averageBPM</code>.
      */
     public User(
             long code,
@@ -62,7 +62,8 @@ public abstract class User implements Serializable {
             String address,
             String email,
             int averageBPM,
-            UserActivities activities) {
+            UserActivities activities)
+            throws UserException {
         this.code = code;
         this.name = name;
         this.address = address;
@@ -140,7 +141,7 @@ public abstract class User implements Serializable {
     }
 
     /**
-     * Sets this user's identier code.
+     * Sets this user's identifier code.
      *
      * @param code Identifier code of this user.
      */
@@ -179,18 +180,18 @@ public abstract class User implements Serializable {
      * Sets this user's average cardiac rhythm while exercising.
      *
      * @param bpm This user's average cardiac rhythm while exercising.
+     * @throws UserException Non-positive <code>averageBPM</code>.
      */
-    public void setAverageBPM(int bpm) {
+    public void setAverageBPM(int bpm) throws UserException {
         if (bpm <= 0)
-            throw new IllegalArgumentException(
-                    "The average BPM of an user must be a positive number!");
+            throw new UserException("The average BPM of an user must be a positive number!");
         this.averageBPM = bpm;
     }
 
     /**
-     * Sets this user's collection of activities (completed or not).
+     * Sets the activities this user must still execute and has already executed.
      *
-     * @param The activities the user must still execute and has already executed.
+     * @param activities The activities this user must still execute and has already executed.
      */
     public void setActivities(UserActivities activities) {
         this.activities = activities.clone();
@@ -202,6 +203,7 @@ public abstract class User implements Serializable {
      * @param obj Object to be compared with this user.
      * @return Whether <code>this</code> is equal to <code>obj</code>.
      */
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || this.getClass() != obj.getClass()) return false;
@@ -216,22 +218,23 @@ public abstract class User implements Serializable {
     }
 
     /**
-     * Compares this user to another one, sorting them by identifier code.
+     * Compares this user to another one, sorting them by identifier code first and then name.
      *
      * @param obj Object to be compared to this user.
-     * @return 0 if the user have the same code, a positive number if this user has a greater code
-     *     and a negative number otherwise.
+     * @return See <code>Comparable.compareTo</code>.
      */
     public int compareTo(Object obj) {
-        User user = (User) obj; // Purposely fail with exception on bad input
-        return (int) (this.code - user.getCode());
+        // Purposely fail with exception on wrong type
+        return Long.compare(this.code, ((User) obj).getCode());
     }
 
     /**
-     * Calculates the hash code of this user.
+     * Calculates the hash code of this user. Only the user's identifier code is considered for hash
+     * code calculation.
      *
      * @return The hash code of this user.
      */
+    @Override
     public int hashCode() {
         return Long.hashCode(this.code);
     }
@@ -248,6 +251,7 @@ public abstract class User implements Serializable {
      *
      * @return A deep copy of this user.
      */
+    @Override
     public abstract User clone();
 
     /**
@@ -255,5 +259,6 @@ public abstract class User implements Serializable {
      *
      * @return A debug string representation of this user.
      */
+    @Override
     public abstract String toString();
 }

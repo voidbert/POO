@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example;
+package org.example.fitness;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import org.example.user.User;
 
 /** A fitness application. */
 public class Fitness implements Serializable {

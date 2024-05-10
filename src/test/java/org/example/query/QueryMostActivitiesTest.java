@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.SortedSet;
-import org.example.activity.Activity;
-import org.example.activity.ActivityPushUp;
-import org.example.user.BeginnerUser;
-import org.example.user.User;
-import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class QueryMostActivitiesTest {
     @Test
-    public void test() {
+    public void accept() throws UserException, ActivityException {
         UserActivities activities = new UserActivities();
         SortedSet<Activity> done = activities.getDone();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
@@ -89,5 +84,13 @@ public class QueryMostActivitiesTest {
         query.accept(user);
         assertEquals(query.getMaxUser().getCode(), 3);
         assertEquals(query.getMaxActivities(), 2);
+    }
+
+    @Test
+    public void testToString() {
+        LocalDateTime date = LocalDateTime.of(2030, 12, 25, 00, 00);
+        assertEquals(
+                (new QueryMostActivities(date, date)).toString(),
+                "QueryMostActivities(start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
     }
 }

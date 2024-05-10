@@ -16,32 +16,19 @@
 
 package org.example.fitness;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.function.Consumer;
 
-/** A query that determines the user that burned the most calories. */
-public class QueryMostCalories extends QueryBetweenDates {
-    /** User that burned the most calories. */
+/** A query that determines the user that has the training plan that burns the most calories. */
+public class QueryHardestTrainingPlan implements Consumer<User> {
+    /** User whose training plan burns the most calories. */
     private User maxUser;
 
-    /** Calories burned by the user with the most calories burned. */
+    /** Calories burned by the hardest training plan. */
     private double maxCalories;
 
-    /** Creates a new query without date restrictions. */
-    public QueryMostCalories() {
-        super();
-        this.maxUser = null;
-        this.maxCalories = -1;
-    }
-
-    /**
-     * Creates a new query that only considers activities that ended between two dates.
-     *
-     * @param start Don't consider activities that ended before this date.
-     * @param end Don't consider activities that ended after this date.
-     */
-    public QueryMostCalories(LocalDateTime start, LocalDateTime end) {
-        super(start, end);
+    /** Creates a new query. */
+    public QueryHardestTrainingPlan() {
         this.maxUser = null;
         this.maxCalories = -1;
     }
@@ -51,14 +38,13 @@ public class QueryMostCalories extends QueryBetweenDates {
      *
      * @param query Query to be copied.
      */
-    public QueryMostCalories(QueryMostCalories query) {
-        super(query);
+    public QueryHardestTrainingPlan(QueryHardestTrainingPlan query) {
         this.maxUser = query.getMaxUser();
         this.maxCalories = query.getMaxCalories();
     }
 
     /**
-     * Gets the user with the most calories burned.
+     * Gets the user with the training plan that burns the most calories.
      *
      * @return The user with the most calories burned. Can be <code>null</code> if no users were
      *     provided.
@@ -69,27 +55,22 @@ public class QueryMostCalories extends QueryBetweenDates {
     }
 
     /**
-     * Gets the calories burned by the user with the most calories burned.
+     * Gets the calories burned by the hardest training plan.
      *
-     * @return The calories burned by the user with the most calories burned. This value is
-     *     unspecified if no users were provided.
+     * @return The calories burned by the hardest training plan. This value is unspecified if no
+     *     users were provided.
      */
     public double getMaxCalories() {
         return this.maxCalories;
     }
 
     /**
-     * Consumes a user to get the information about its activities.
+     * Consumes a user to gets the information about its training plan.
      *
      * @param user User to be consumed.
      */
     public void accept(User user) {
-        double calories =
-                user.getActivities().getDone().stream()
-                        .filter(a -> this.activityFits(a))
-                        .mapToDouble(a -> a.countCalories(user))
-                        .sum();
-
+        double calories = user.getActivities().getTrainingPlan().countCalories(user);
         if (calories > this.maxCalories) {
             this.maxCalories = calories;
             this.maxUser = user.clone();
@@ -103,7 +84,7 @@ public class QueryMostCalories extends QueryBetweenDates {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.maxUser, this.maxCalories);
+        return Objects.hash(this.maxUser, this.maxCalories);
     }
 
     /**
@@ -117,20 +98,19 @@ public class QueryMostCalories extends QueryBetweenDates {
         if (this == obj) return true;
         if (obj == null || this.getClass() != obj.getClass()) return false;
 
-        QueryMostCalories query = (QueryMostCalories) obj;
-        return super.equals(query)
-                && this.maxUser.equals(query.getMaxUser())
+        QueryHardestTrainingPlan query = (QueryHardestTrainingPlan) obj;
+        return this.maxUser.equals(query.getMaxUser())
                 && this.maxCalories == query.getMaxCalories();
     }
 
     /**
-     * Creates a deep copy of this activity.
+     * Creates a deep copy of this query.
      *
-     * @return A deep copy of this activity.
+     * @return A deep copy of this query.
      */
     @Override
-    public QueryMostCalories clone() {
-        return new QueryMostCalories(this);
+    public QueryHardestTrainingPlan clone() {
+        return new QueryHardestTrainingPlan(this);
     }
 
     /**
@@ -140,8 +120,6 @@ public class QueryMostCalories extends QueryBetweenDates {
      */
     @Override
     public String toString() {
-        return String.format(
-                "QueryMostCalories(start = \"%s\", end = \"%s\")",
-                this.getStart().toString(), this.getEnd().toString());
+        return "QueryHardestTrainingPlan()";
     }
 }

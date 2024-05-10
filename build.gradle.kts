@@ -21,7 +21,7 @@ java {
 }
 
 application {
-    mainClass = "org.example.Application"
+    mainClass = "org.example.fitness.Application"
 }
 
 spotless {

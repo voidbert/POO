@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
 /** A weight lifting activity that can be executed by an user. */
 public class ActivityWeightLifting extends ActivityRepetitionWeighted implements ActivityHard {
@@ -36,15 +35,18 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted implements
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param numberOfReps Number of repetitions in a set.
      * @param weightsHeft Heft of the weigths, in kilograms.
-     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
-     * @throws IllegalArgumentException <code>weightsHeft</code> isn't a positive number.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>numberOfReps</code> isn't positive.
+     * @throws ActivityException <code>weightsHeft</code> isn't positive.
      */
     public ActivityWeightLifting(
             Duration executionTime,
             LocalDateTime executionDate,
             int bpm,
             int numberOfReps,
-            double weightsHeft) {
+            double weightsHeft)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps, weightsHeft);
     }
@@ -69,13 +71,13 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted implements
     }
 
     @Override
-    public ActivityWeightLifting clone() {
-        return new ActivityWeightLifting(this);
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.getClass());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(super.hashCode()), this.getClass());
+    public ActivityWeightLifting clone() {
+        return new ActivityWeightLifting(this);
     }
 
     @Override

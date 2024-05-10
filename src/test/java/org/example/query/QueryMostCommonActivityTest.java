@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,17 +22,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.example.activity.Activity;
-import org.example.activity.ActivityPushUp;
-import org.example.activity.ActivityTrackRun;
-import org.example.user.BeginnerUser;
-import org.example.user.User;
-import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class QueryMostCommonActivityTest {
     @Test
-    public void test() {
+    public void accept() throws UserException, ActivityException {
         UserActivities activities = new UserActivities();
         SortedSet<Activity> done = new TreeSet<Activity>();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());

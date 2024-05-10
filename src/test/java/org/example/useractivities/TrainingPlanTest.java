@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example.useractivities;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,30 +23,22 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import org.example.activity.Activity;
-import org.example.activity.ActivityMountainRun;
-import org.example.activity.ActivityPushUp;
 import org.junit.jupiter.api.Test;
 
 public class TrainingPlanTest {
-    private final TrainingPlan plan;
-    private final SortedMap<Activity, Integer> activities;
-    private final Set<DayOfWeek> repetitions;
+    private TrainingPlan plan;
+    private SortedMap<Activity, Integer> activities;
+    private Set<DayOfWeek> repetitions;
 
-    public TrainingPlanTest() {
+    public TrainingPlanTest() throws ActivityException, ActivityOverlapException {
         this.activities = new TreeMap<Activity, Integer>();
         this.activities.put(
                 new ActivityMountainRun(
@@ -62,24 +54,24 @@ public class TrainingPlanTest {
                 3);
 
         DayOfWeek[] days = {DayOfWeek.MONDAY, DayOfWeek.FRIDAY};
-        this.repetitions = Arrays.stream(days).collect(Collectors.toSet());
+        this.repetitions = new HashSet<DayOfWeek>(Arrays.asList(days));
 
         this.plan = new TrainingPlan(activities, this.repetitions);
     }
 
     @Test
-    public void encapsulation() {
+    public void encapsulation() throws ActivityException {
         this.repetitions.add(DayOfWeek.WEDNESDAY);
-        assertEquals(this.plan.getRepetitions().toArray().length, 2);
+        assertEquals(this.plan.getRepetitions().size(), 2);
 
-        Activity firstActivities = (Activity) this.activities.keySet().toArray()[0];
+        Activity firstActivities = this.activities.keySet().iterator().next();
         firstActivities.setExecutionTime(Duration.ofMinutes(10));
-        Activity firstPlan = (Activity) this.plan.getActivities().keySet().toArray()[0];
+        Activity firstPlan = this.plan.getActivities().keySet().iterator().next();
         assertEquals(firstPlan.getExecutionTime(), Duration.ofMinutes(50));
     }
 
     @Test
-    void overlaps() {
+    void overlaps() throws ActivityException {
         assertFalse(
                 this.plan.overlaps(
                         new ActivityPushUp(
@@ -97,7 +89,7 @@ public class TrainingPlanTest {
     }
 
     @Test
-    public void addActivity() {
+    public void addActivity() throws ActivityException {
         assertDoesNotThrow(
                 () -> {
                     this.plan.addActivity(
@@ -108,9 +100,20 @@ public class TrainingPlanTest {
                                     20),
                             3);
                 });
+        assertThrows(
+                ActivityOverlapException.class,
+                () -> {
+                    this.plan.addActivity(
+                            new ActivityPushUp(
+                                    Duration.ofMinutes(10),
+                                    LocalDateTime.of(2024, 5, 6, 11, 30, 0),
+                                    100,
+                                    20),
+                            -20);
+                });
 
         assertThrows(
-                RuntimeException.class,
+                ActivityOverlapException.class,
                 () -> {
                     this.plan.addActivity(
                             new ActivityPushUp(
@@ -123,17 +126,17 @@ public class TrainingPlanTest {
     }
 
     @Test
-    public void removeActivity() {
+    public void removeActivity() throws ActivityDoesntExistException {
         TrainingPlan copy = this.plan.clone();
 
         assertThrows(
-                IndexOutOfBoundsException.class,
+                ActivityDoesntExistException.class,
                 () -> {
                     this.plan.removeActivity(-1);
                 });
 
         assertThrows(
-                IndexOutOfBoundsException.class,
+                ActivityDoesntExistException.class,
                 () -> {
                     this.plan.removeActivity(2);
                 });
@@ -149,7 +152,7 @@ public class TrainingPlanTest {
     }
 
     @Test
-    public void setActivities() {
+    public void setActivities() throws ActivityException {
         this.activities.put(
                 new ActivityPushUp(
                         Duration.ofMinutes(10), LocalDateTime.of(2024, 5, 6, 11, 30, 0), 100, 20),
@@ -164,7 +167,7 @@ public class TrainingPlanTest {
                         Duration.ofMinutes(10), LocalDateTime.of(2024, 5, 6, 11, 59, 0), 100, 20),
                 3);
         assertThrows(
-                RuntimeException.class,
+                ActivityOverlapException.class,
                 () -> {
                     this.plan.setActivities(this.activities);
                 });
@@ -182,12 +185,17 @@ public class TrainingPlanTest {
         assertEquals(activities[3].getExecutionDate(), LocalDateTime.of(2024, 5, 6, 11, 20, 0));
 
         LocalDateTime end2 = LocalDateTime.of(2024, 5, 6, 11, 20, 0);
-        activities = this.plan.activitiesBetween(start2, end2).toArray(Activity[]::new);
-        assertEquals(activities.length, 3);
+        assertEquals(this.plan.activitiesBetween(start2, end2).size(), 3);
     }
 
     @Test
-    public void testEquals() {
+    public void countCalories() {
+        assertEquals((new TrainingPlan()).countCalories(new BeginnerUser()), 0);
+        assertEquals(this.plan.countCalories(new BeginnerUser()), 1486.8, 0.1);
+    }
+
+    @Test
+    public void testEquals() throws ActivityException, ActivityOverlapException {
         this.activities.put(
                 new ActivityMountainRun(
                         Duration.ofMinutes(50),
@@ -217,21 +225,6 @@ public class TrainingPlanTest {
 
     @Test
     public void serizalize() {
-        try {
-            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
-            objectOutputStream.writeObject(this.plan);
-
-            byte bytes[] = byteOutputStream.toByteArray();
-            ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-
-            TrainingPlan read = (TrainingPlan) objectInputStream.readObject();
-            assertEquals(read, this.plan);
-        } catch (IOException e) {
-            assertTrue(false);
-        } catch (ClassNotFoundException e) {
-            assertTrue(false);
-        }
+        TestUtils.serialize(this.plan);
     }
 }

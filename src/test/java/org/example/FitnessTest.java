@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.example;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,14 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
-import org.example.user.*;
-import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class FitnessTest {
     private Fitness fitness;
 
-    public FitnessTest() {
+    public FitnessTest() throws UserException {
         User u1 =
                 new BeginnerUser(
                         1,

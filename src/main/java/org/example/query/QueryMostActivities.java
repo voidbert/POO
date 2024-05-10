@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.function.Consumer;
-import org.example.user.User;
 
-/** A query that calculates the user that has executed the most activities. */
-public class QueryMostActivities extends QueryBetweenDates implements Consumer<User> {
+/** A query that determines the user that has executed the most activities. */
+public class QueryMostActivities extends QueryBetweenDates {
     /** User with the most activities executed. */
     private User maxUser;
 
-    /** Activities executed by the user with the most activities. */
+    /** Number of activities executed by the user with the most activities. */
     private long maxActivities;
 
     /** Creates a new query without date restrictions. */
     public QueryMostActivities() {
         super();
-        this.maxActivities = -1;
         this.maxUser = null;
+        this.maxActivities = -1;
     }
 
     /**
@@ -44,8 +42,8 @@ public class QueryMostActivities extends QueryBetweenDates implements Consumer<U
      */
     public QueryMostActivities(LocalDateTime start, LocalDateTime end) {
         super(start, end);
-        this.maxActivities = -1;
         this.maxUser = null;
+        this.maxActivities = -1;
     }
 
     /**
@@ -81,7 +79,7 @@ public class QueryMostActivities extends QueryBetweenDates implements Consumer<U
     }
 
     /**
-     * Called to feed information about a user.
+     * Consumes a user to get the information about its activities.
      *
      * @param user User to be consumed.
      */
@@ -100,6 +98,7 @@ public class QueryMostActivities extends QueryBetweenDates implements Consumer<U
      *
      * @return The hash code of this query.
      */
+    @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), this.maxUser, this.maxActivities);
     }
@@ -110,6 +109,7 @@ public class QueryMostActivities extends QueryBetweenDates implements Consumer<U
      * @param obj Object to be compared with this query.
      * @return Whether <code>this</code> is equal to <code>obj</code>.
      */
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || this.getClass() != obj.getClass()) return false;
@@ -125,6 +125,7 @@ public class QueryMostActivities extends QueryBetweenDates implements Consumer<U
      *
      * @return A deep copy of this query.
      */
+    @Override
     public QueryMostActivities clone() {
         return new QueryMostActivities(this);
     }
@@ -134,9 +135,10 @@ public class QueryMostActivities extends QueryBetweenDates implements Consumer<U
      *
      * @return A debug string representation of this query.
      */
+    @Override
     public String toString() {
         return String.format(
-                "QueryMostActivities(start = %s, end = %s)",
+                "QueryMostActivities(start = \"%s\", end = \"%s\")",
                 this.getStart().toString(), this.getEnd().toString());
     }
 }

@@ -20,52 +20,50 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/** A track run activity that can be executed by an user. */
-public class ActivityTrackRun extends ActivityDistance {
-    /** Creates a new empty track run activity. */
-    public ActivityTrackRun() {
+/** A diamond push-up activity that can be executed by an user. */
+public class ActivityDiamondPushUp extends ActivityRepetition implements ActivityHard {
+    /** Creates a new empty diamond push-up activity. */
+    public ActivityDiamondPushUp() {
         super();
     }
 
     /**
-     * Creates a new track run activity from the value of its fields.
+     * Creates a new diamond push-up activity from the value of its fields.
      *
      * @param executionTime Duration of the activity.
      * @param executionDate When the activity was / will be executed.
      * @param bpm Cardiac rhythm of the user while executing this activity.
-     * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
+     * @param numberOfReps Number of repetitions in a set.
      * @throws ActivityException <code>executionTime</code> lasts less than a second.
      * @throws ActivityException <code>bpm</code> isn't positive.
-     * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
+     * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
-    public ActivityTrackRun(
-            Duration executionTime, LocalDateTime executionDate, int bpm, double distanceToTraverse)
+    public ActivityDiamondPushUp(
+            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps)
             throws ActivityException {
 
-        super(executionTime, executionDate, bpm, distanceToTraverse);
+        super(executionTime, executionDate, bpm, numberOfReps);
     }
 
     /**
-     * Copy constructor of a track run activity.
+     * Copy constructor of a diamond push-up activity.
      *
      * @param activity Activity to be copied.
      */
-    public ActivityTrackRun(ActivityTrackRun activity) {
+    public ActivityDiamondPushUp(ActivityDiamondPushUp activity) {
         super(activity);
     }
 
     @Override
     public double countCalories(User user) {
         double MET; /* Metabolic Equivalent of Task */
-        double kmPerHour =
-                this.getDistanceToTraverse() / (this.getExecutionTime().toSeconds() / 3600.0);
+        if (this.getNumberOfReps() <= 40) MET = 4.5;
+        else MET = 9;
 
-        if (kmPerHour <= 6.7593) MET = 6.5;
-        else if (kmPerHour <= 12.0701) MET = 11.8;
-        else if (kmPerHour <= 15.4497) MET = 14.8;
-        else MET = 18.0; /* High competition track racing */
-
-        return MET * this.getBPM() * this.getDistanceToTraverse() * user.getCalorieMultiplier();
+        return MET
+                * this.getBPM()
+                * (this.getExecutionTime().toSeconds() / 3600.0)
+                * user.getCalorieMultiplier();
     }
 
     @Override
@@ -74,17 +72,17 @@ public class ActivityTrackRun extends ActivityDistance {
     }
 
     @Override
-    public ActivityTrackRun clone() {
-        return new ActivityTrackRun(this);
+    public ActivityDiamondPushUp clone() {
+        return new ActivityDiamondPushUp(this);
     }
 
     @Override
     public String toString() {
         return String.format(
-                "ActivityTrackRun(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, distanceToTraverse = %.3f)",
+                "ActivityDiamondPushUp(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d)",
                 this.getExecutionTime().toString(),
                 this.getExecutionDate().toString(),
                 this.getBPM(),
-                this.getDistanceToTraverse());
+                this.getNumberOfReps());
     }
 }

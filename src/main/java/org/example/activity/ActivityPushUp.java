@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
 /** A push-up activity that can be executed by an user. */
 public class ActivityPushUp extends ActivityRepetition {
@@ -35,10 +34,13 @@ public class ActivityPushUp extends ActivityRepetition {
      * @param executionDate When the activity was / will be executed.
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param numberOfReps Number of repetitions in a set.
-     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
     public ActivityPushUp(
-            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps) {
+            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps);
     }
@@ -65,13 +67,13 @@ public class ActivityPushUp extends ActivityRepetition {
     }
 
     @Override
-    public ActivityPushUp clone() {
-        return new ActivityPushUp(this);
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.getClass());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(super.hashCode()), this.getClass());
+    public ActivityPushUp clone() {
+        return new ActivityPushUp(this);
     }
 
     @Override

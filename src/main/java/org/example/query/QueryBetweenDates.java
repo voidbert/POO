@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.function.Consumer;
-import org.example.activity.Activity;
-import org.example.user.User;
 
 /** A query that only takes into account activities between two dates. */
 public abstract class QueryBetweenDates implements Consumer<User> {
     /** Don't consider activities that ended before this date. */
     private LocalDateTime start;
 
-    /** Don't consider activities that started after this date. */
+    /** Don't consider activities that ended after this date. */
     private LocalDateTime end;
 
     /** Creates a new query without date restrictions. */
@@ -54,7 +52,7 @@ public abstract class QueryBetweenDates implements Consumer<User> {
      */
     public QueryBetweenDates(QueryBetweenDates query) {
         this.start = query.getStart();
-        this.start = query.getEnd();
+        this.end = query.getEnd();
     }
 
     /**
@@ -76,29 +74,6 @@ public abstract class QueryBetweenDates implements Consumer<User> {
     }
 
     /**
-     * Calculates the hash code of this query.
-     *
-     * @return The hash code of this query.
-     */
-    public int hashCode() {
-        return Objects.hash(this.start, this.end);
-    }
-
-    /**
-     * Checks if this query is equal to another object.
-     *
-     * @param obj Object to be compared with this query.
-     * @return Whether <code>this</code> is equal to <code>obj</code>.
-     */
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
-
-        QueryBetweenDates query = (QueryBetweenDates) obj;
-        return this.start.equals(query.start) && this.end.equals(query.end);
-    }
-
-    /**
      * Checks if an activity fits the date criteria for this query.
      *
      * @param activity Activity to be checked
@@ -111,10 +86,36 @@ public abstract class QueryBetweenDates implements Consumer<User> {
     }
 
     /**
+     * Calculates the hash code of this query.
+     *
+     * @return The hash code of this query.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.start, this.end);
+    }
+
+    /**
+     * Checks if this query is equal to another object.
+     *
+     * @param obj Object to be compared with this query.
+     * @return Whether <code>this</code> is equal to <code>obj</code>.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
+
+        QueryBetweenDates query = (QueryBetweenDates) obj;
+        return this.start.equals(query.start) && this.end.equals(query.end);
+    }
+
+    /**
      * Creates a deep copy of this activity.
      *
      * @return A deep copy of this activity.
      */
+    @Override
     public abstract QueryBetweenDates clone();
 
     /**
@@ -122,5 +123,6 @@ public abstract class QueryBetweenDates implements Consumer<User> {
      *
      * @return A debug string representation of this query.
      */
+    @Override
     public abstract String toString();
 }

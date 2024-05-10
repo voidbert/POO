@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.example.useractivities;
+package org.example.fitness;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -30,7 +29,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import org.example.activity.Activity;
 
 /**
  * A training plan, composed of activities that can be executed multiple times on many days of the
@@ -39,31 +37,30 @@ import org.example.activity.Activity;
 public class TrainingPlan implements Serializable {
     /**
      * Activities in the plan, sorted by date. Activities executed multiple times are considered to
-     * be done consecutively. The YYYY/MM/DD part of the date of activities will be ignored, leaving
-     * only the time of day. The date part, being forced to assume a value, will be replaced by
+     * be done consecutively. The YYYY/MM/DD part of the date of activities will be replaced by
      * 0001/01/01.
      */
     private SortedMap<Activity, Integer> activities;
 
     /** Days of the week when this training plan is executed. */
-    private Set<DayOfWeek> repetitions;
+    private SortedSet<DayOfWeek> repetitions;
 
     /** Creates a new empty training plan. */
     public TrainingPlan() {
         this.activities = new TreeMap<Activity, Integer>();
-        this.repetitions = new HashSet<DayOfWeek>();
+        this.repetitions = new TreeSet<DayOfWeek>();
     }
 
     /**
      * Creates a training plan from the values of its fields.
      *
      * @param activities Activities in the training plan, associated to the number of times they're
-     *     executed and sorted by execution date. The YYYY/MM/DD part of the date of activities will
-     *     be ignored, leaving only the time of day.
+     *     executed. The YYYY/MM/DD part of the date of activities will be ignored.
      * @param repetitions Days of the week when this training plan is executed.
-     * @throws IllegalArgumentException There are overlapping <code>activities</code>.
+     * @throws ActivityOverlapException There are overlapping <code>activities</code>.
      */
-    public TrainingPlan(SortedMap<Activity, Integer> activities, Set<DayOfWeek> repetitions) {
+    public TrainingPlan(Map<Activity, Integer> activities, Set<DayOfWeek> repetitions)
+            throws ActivityOverlapException {
         this(); // Fix NullPointerException during this.getActivities in this.setActivities.
         this.setActivities(activities);
         this.setRepetitions(repetitions);
@@ -100,8 +97,8 @@ public class TrainingPlan implements Serializable {
      *
      * @return Set of week days when this training plan is executed.
      */
-    public Set<DayOfWeek> getRepetitions() {
-        return this.repetitions.stream().collect(Collectors.toSet());
+    public SortedSet<DayOfWeek> getRepetitions() {
+        return new TreeSet<DayOfWeek>(this.repetitions);
     }
 
     /**
@@ -110,19 +107,17 @@ public class TrainingPlan implements Serializable {
      * @param repetitions The days of the week in which this training plan needs to be executed.
      */
     public void setRepetitions(Set<DayOfWeek> repetitions) {
-        this.repetitions = repetitions.stream().collect(Collectors.toSet());
+        this.repetitions = new TreeSet<DayOfWeek>(repetitions);
     }
 
     /**
-     * Checks if an activity overlaps with an activity of the training plan.
+     * Checks if an internal activity overlaps with an activity already in this training plan.
      *
-     * @param activity Activity to be checked for overlaps. Its date will be checked to see if it
-     *     matches any week day in which the training plan is executed.
+     * @param activity Activity to be checked for overlapping. Its date won't be checked to see if
+     *     it matches any week day in which the training plan is executed.
      * @return Whether <code>activity</code> overlaps with any activity in this training plan.
      */
-    public boolean overlaps(Activity activity) {
-        if (!this.repetitions.contains(activity.getExecutionDate().getDayOfWeek())) return false;
-
+    private boolean overlapsDaytimeOnly(Activity activity) {
         Activity normalizedDateActivity = activity.clone();
         normalizedDateActivity.setExecutionDate(
                 normalizedDateActivity
@@ -140,7 +135,11 @@ public class TrainingPlan implements Serializable {
             Duration repeat =
                     Duration.ofSeconds(
                             repeatActivity.getExecutionTime().toSeconds() * current.getValue());
-            repeatActivity.setExecutionTime(repeat);
+
+            try {
+                repeatActivity.setExecutionTime(repeat);
+            } catch (ActivityException e) {
+            } // repeat > 0 because getExecutionTime() > 0
 
             if (repeatActivity.overlaps(normalizedDateActivity)) {
                 overlaps = true;
@@ -150,26 +149,50 @@ public class TrainingPlan implements Serializable {
     }
 
     /**
+     * Checks if an external activity overlaps with an activity already in this training plan.
+     *
+     * @param activity Activity to be checked for overlapping. Its date will be checked to see if it
+     *     matches any week day in which the training plan is executed.
+     * @return Whether <code>activity</code> overlaps with any activity in this training plan.
+     */
+    public boolean overlaps(Activity activity) {
+        if (!this.repetitions.contains(activity.getExecutionDate().getDayOfWeek())) return false;
+        return this.overlapsDaytimeOnly(activity);
+    }
+
+    /**
      * Adds an activity to this training plan.
      *
      * @param activity Activity to be added to this training plan. Its YYYY/MM//DD will be ignored,
      *     leaving only the time of day.
      * @param times Number of times <code>activity</code> is executed consecutively.
-     * @throws IllegalArgumentException <code>activity</code> overlaps with an activity already
+     * @throws ActivityOverlapException <code>activity</code> overlaps with an activity already
      *     present in this plan.
+     * @throws ActivityOverlapException <code>times</code> isn't positive. Negative overlap!
      */
-    public void addActivity(Activity activity, Integer times) {
-        Activity repeatActivity = activity.clone();
-        Duration repeat = Duration.ofSeconds(activity.getExecutionTime().toSeconds() * times);
-        repeatActivity.setExecutionTime(repeat);
-        repeatActivity.setExecutionDate(
-                repeatActivity.getExecutionDate().withDayOfMonth(1).withMonth(1).withYear(1));
-
-        if (this.overlaps(repeatActivity)) {
-            throw new IllegalArgumentException("Overlapping activities!");
+    public void addActivity(Activity activity, Integer times) throws ActivityOverlapException {
+        if (times <= 0) {
+            throw new ActivityOverlapException(
+                    "Non-positive number of activity executions! Negative overlap.");
         }
 
-        repeatActivity.setExecutionTime(activity.getExecutionTime());
+        Activity repeatActivity = activity.clone();
+        Duration repeat = Duration.ofSeconds(activity.getExecutionTime().toSeconds() * times);
+        try {
+            repeatActivity.setExecutionTime(repeat);
+        } catch (ActivityException e) {
+        }
+
+        repeatActivity.setExecutionDate(
+                repeatActivity.getExecutionDate().withDayOfMonth(1).withMonth(1).withYear(1));
+        if (this.overlapsDaytimeOnly(repeatActivity)) {
+            throw new ActivityOverlapException();
+        }
+
+        try {
+            repeatActivity.setExecutionTime(activity.getExecutionTime());
+        } catch (ActivityException e) {
+        } // getExecutionTime() > 0
         this.activities.put(repeatActivity, times);
     }
 
@@ -177,24 +200,23 @@ public class TrainingPlan implements Serializable {
      * Removes an activity from the training plan.
      *
      * @param index Index of the activity in the training plan.
-     * @throws IndexOutOfBoundsException <code>index</code> out of range.
+     * @throws ActivityDoesntExistException <code>index</code> out of range.
      */
-    public void removeActivity(int index) {
-        Activity toRemove = null;
+    public void removeActivity(int index) throws ActivityDoesntExistException {
+        boolean removed = false;
         int count = 0;
         Iterator<Activity> i = this.activities.keySet().iterator();
-        while (i.hasNext() && toRemove == null) {
+        while (i.hasNext() && !removed) {
             Activity a = i.next();
             if (count == index) {
-                toRemove = a;
+                i.remove();
+                removed = true;
             }
             count++;
         }
 
-        if (toRemove != null) {
-            this.activities.remove(toRemove);
-        } else {
-            throw new IndexOutOfBoundsException("Activity to remove doesn't exist");
+        if (!removed) {
+            throw new ActivityDoesntExistException();
         }
     }
 
@@ -204,8 +226,9 @@ public class TrainingPlan implements Serializable {
      * @param activities Activities in the training plan, associated to the number of times they're
      *     executed and sorted by execution date. The YYYY/MM/DD part of the date of activities will
      *     be ignored, leaving only the time of day.
+     * @throws ActivityOverlapException Overlapping <code>activities</code>.
      */
-    public void setActivities(SortedMap<Activity, Integer> activities) {
+    public void setActivities(Map<Activity, Integer> activities) throws ActivityOverlapException {
         SortedMap<Activity, Integer> previous = this.getActivities();
         this.activities = new TreeMap<Activity, Integer>();
 
@@ -213,7 +236,7 @@ public class TrainingPlan implements Serializable {
             for (Map.Entry<Activity, Integer> current : activities.entrySet()) {
                 this.addActivity(current.getKey(), current.getValue());
             }
-        } catch (IllegalArgumentException e) {
+        } catch (ActivityOverlapException e) {
             this.activities = previous;
             throw e;
         }
@@ -240,8 +263,7 @@ public class TrainingPlan implements Serializable {
                                         .withYear(d.getYear())
                                         .plusSeconds(a.getExecutionTime().toSeconds() * i));
 
-                        LocalDateTime end =
-                                a.getExecutionDate().plusSeconds(a.getExecutionTime().toSeconds());
+                        LocalDateTime end = a.getEndDate();
                         if (end.isBefore(goal) || end.isEqual(goal)) {
                             ret.add(a);
                         }
@@ -253,10 +275,23 @@ public class TrainingPlan implements Serializable {
     }
 
     /**
+     * Counts the calories burned by executing this training plan.
+     *
+     * @param user User executing the training plan.
+     * @return The calories burned by executing this training plan.
+     */
+    public double countCalories(User user) {
+        return this.activities.entrySet().stream()
+                .mapToDouble(e -> e.getKey().countCalories(user) * e.getValue())
+                .sum();
+    }
+
+    /**
      * Calculates the hash code of this training plan.
      *
      * @return The hash code of this training plan.
      */
+    @Override
     public int hashCode() {
         return Objects.hash(this.activities, this.repetitions);
     }
@@ -267,6 +302,7 @@ public class TrainingPlan implements Serializable {
      * @param obj Object to be compared with this training plan.
      * @return Whether <code>this</code> is equal to <code>obj</code>.
      */
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || this.getClass() != obj.getClass()) return false;
@@ -281,6 +317,7 @@ public class TrainingPlan implements Serializable {
      *
      * @return A deep copy of this training plan.
      */
+    @Override
     public TrainingPlan clone() {
         return new TrainingPlan(this);
     }
@@ -290,6 +327,7 @@ public class TrainingPlan implements Serializable {
      *
      * @return A debug string representation of this training plan.
      */
+    @Override
     public String toString() {
         return String.format(
                 "TrainingPlan(activities = %s, repetitions = %s)",

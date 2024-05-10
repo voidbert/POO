@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
 /** An exercise activity that can be executed by an user. */
 public abstract class Activity implements Serializable, Comparable {
@@ -35,9 +34,9 @@ public abstract class Activity implements Serializable, Comparable {
 
     /** Creates a new empty activity. */
     public Activity() {
-        this.executionTime = Duration.ZERO;
+        this.executionTime = Duration.ofSeconds(1);
         this.executionDate = LocalDateTime.MIN;
-        this.bpm = 0;
+        this.bpm = 1;
     }
 
     /**
@@ -46,10 +45,11 @@ public abstract class Activity implements Serializable, Comparable {
      * @param executionTime Duration of the activity.
      * @param executionDate When the activity was / will be executed.
      * @param bpm Cardiac rhythm of the user while executing this activity.
-     * @throws IllegalArgumentException <code>executionTime</code> lasts less than a second.
-     * @throws IllegalArgumentException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
      */
-    public Activity(Duration executionTime, LocalDateTime executionDate, int bpm) {
+    public Activity(Duration executionTime, LocalDateTime executionDate, int bpm)
+            throws ActivityException {
         this.setExecutionTime(executionTime);
         this.executionDate = executionDate;
         this.setBPM(bpm);
@@ -85,6 +85,15 @@ public abstract class Activity implements Serializable, Comparable {
     }
 
     /**
+     * Gets the time when this activity was / will be completed.
+     *
+     * @return The time when this activity was / will be completed.
+     */
+    public LocalDateTime getEndDate() {
+        return this.executionDate.plusSeconds(this.executionTime.toSeconds());
+    }
+
+    /**
      * Gets the cardiac rhythm of the user while executing this activity.
      *
      * @return The cardiac rhythm of the user while executing this activity.
@@ -97,11 +106,11 @@ public abstract class Activity implements Serializable, Comparable {
      * Sets the duration of this activity.
      *
      * @param executionTime The duration of this activity.
-     * @throws IllegalArgumentException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
      */
-    public void setExecutionTime(Duration executionTime) {
+    public void setExecutionTime(Duration executionTime) throws ActivityException {
         if (executionTime.toSeconds() == 0)
-            throw new IllegalArgumentException("An exercise should last at least one second long!");
+            throw new ActivityException("An activity should be at least one second long!");
         this.executionTime = executionTime;
     }
 
@@ -118,12 +127,10 @@ public abstract class Activity implements Serializable, Comparable {
      * Sets the cardiac rhythm of the user while executing this activity.
      *
      * @param bpm the cardiac rhythm of the user while executing this activity.
-     * @throws IllegalArgumentException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>bpm</code> isn't positive.
      */
-    public void setBPM(int bpm) throws IllegalArgumentException {
-        if (bpm <= 0)
-            throw new IllegalArgumentException(
-                    "The average BPM during exercise must be a positive number!");
+    public void setBPM(int bpm) throws ActivityException {
+        if (bpm <= 0) throw new ActivityException("Average BPM during exercise must be positive!");
         this.bpm = bpm;
     }
 
@@ -134,22 +141,31 @@ public abstract class Activity implements Serializable, Comparable {
      * @return Whether if this activity overlaps another activity.
      */
     public boolean overlaps(Activity activity) {
-        LocalDateTime thisStart = this.getExecutionDate();
-        LocalDateTime thisEnd = thisStart.plusSeconds(this.executionTime.toSeconds());
+        LocalDateTime thisStart = this.executionDate;
+        LocalDateTime thisEnd = this.getEndDate();
         LocalDateTime activityStart = activity.getExecutionDate();
-        LocalDateTime activityEnd =
-                activityStart.plusSeconds(activity.getExecutionTime().toSeconds());
+        LocalDateTime activityEnd = activity.getEndDate();
 
         return thisStart.isBefore(activityEnd) && activityStart.isBefore(thisEnd);
     }
 
     /**
-     * Counts the calories that the user executing this activity consumes.
+     * Counts the calories that the user executing this activity burns.
      *
      * @param user User executing this activity.
-     * @return The calories that the user executing this activity consumes.
+     * @return The calories that the user executing this activity burns.
      */
     public abstract double countCalories(User user);
+
+    /**
+     * Calculates the hash code of this activity.
+     *
+     * @return The hash code of this activity.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.executionTime, this.executionDate, this.bpm);
+    }
 
     /**
      * Checks if this activity is equal to another object.
@@ -169,22 +185,14 @@ public abstract class Activity implements Serializable, Comparable {
     }
 
     /**
-     * Calculates the hash code of this activity.
-     *
-     * @return The hash code of this activity.
-     */
-    public int hashCode() {
-        return Objects.hash(this.executionTime, this.executionDate, Integer.valueOf(this.bpm));
-    }
-
-    /**
-     * Compares this activity to another one, sorting them by execution date.
+     * Compares this activity to another one, sorting them by execution date, and then by duration.
      *
      * @param obj Object to be compared to this activity.
-     * @return 0 if the activities have the same date, 1 if
+     * @return See <code>Comparable.compareTo</code>.
      */
     public int compareTo(Object obj) {
-        Activity activity = (Activity) obj; /* This is supposed to fail with exception if need be */
+        // Purposely fail with exception on wrong type
+        Activity activity = (Activity) obj;
 
         int dateCompare = this.executionDate.compareTo(activity.getExecutionDate());
         int durationCompare = this.executionTime.compareTo(activity.getExecutionTime());
@@ -192,7 +200,7 @@ public abstract class Activity implements Serializable, Comparable {
             return dateCompare;
         } else if (durationCompare != 0) {
             return durationCompare;
-        } else if (this.equals(obj)) {
+        } else if (this.equals(activity)) {
             return 0;
         } else {
             /* Just don't return 0 if the activities are different. Ignore order */
@@ -205,6 +213,7 @@ public abstract class Activity implements Serializable, Comparable {
      *
      * @return A deep copy of this activity.
      */
+    @Override
     public abstract Activity clone();
 
     /**
@@ -212,5 +221,6 @@ public abstract class Activity implements Serializable, Comparable {
      *
      * @return A debug string representation of this activity.
      */
+    @Override
     public abstract String toString();
 }

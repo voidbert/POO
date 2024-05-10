@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.activity.ActivityDistance;
-import org.example.user.User;
 
 /** A query that calculates the distance a single user ran. */
 public class QueryDistance extends QueryBetweenDates {
@@ -36,18 +34,19 @@ public class QueryDistance extends QueryBetweenDates {
     public QueryDistance() {
         super();
         this.activityType = ActivityDistance.class;
-        this.distance = -1.0;
         this.user = null;
+        this.distance = -1.0;
     }
 
     /**
      * Creates a new query without date restrictions but that only considers a subclass of distance
      * activities.
      *
-     * @param activityType Type of activity to be considered.
+     * @param activityType Type of activity to be considered (e.g.: <code>ActivityDistance.class
+     *     </code>).
      */
     public QueryDistance(Class<? extends ActivityDistance> activityType) {
-        this.activityType = activityType; // clone() is protected. Makes sense
+        this.activityType = activityType;
         this.user = null;
         this.distance = -1.0;
     }
@@ -65,9 +64,9 @@ public class QueryDistance extends QueryBetweenDates {
             LocalDateTime start,
             LocalDateTime end) {
         super(start, end);
-        this.activityType = activityType; // clone() is protected. Makes sense
-        this.distance = -1.0;
+        this.activityType = activityType;
         this.user = null;
+        this.distance = -1.0;
     }
 
     /**
@@ -117,15 +116,17 @@ public class QueryDistance extends QueryBetweenDates {
      *
      * @return The hash code of this query.
      */
+    @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), this.user, this.distance);
+        return Objects.hash(super.hashCode(), this.activityType, this.user, this.distance);
     }
 
     /**
-     * Called to feed information about a user.
+     * Consumes a user to gets the information about its training plan.
      *
      * @param user User to be consumed.
      */
+    @Override
     public void accept(User user) {
         this.user = user.clone();
         this.distance =
@@ -140,6 +141,7 @@ public class QueryDistance extends QueryBetweenDates {
      *
      * @return A deep copy of this activity.
      */
+    @Override
     public QueryDistance clone() {
         return new QueryDistance(this);
     }
@@ -149,9 +151,10 @@ public class QueryDistance extends QueryBetweenDates {
      *
      * @return A debug string representation of this query.
      */
+    @Override
     public String toString() {
         return String.format(
-                "QueryDistance(activityType = %s, start = %s, end = %s)",
+                "QueryDistance(activityType = %s, start = \"%s\", end = \"%s\")",
                 this.getActivityType().getSimpleName(),
                 this.getStart().toString(),
                 this.getEnd().toString());

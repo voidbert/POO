@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
-/** A repetetion activity with weights that can be executed by an user. */
+/** A repetetion activity that also involves wheights. */
 public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
     /** Heft of the weights, in kilograms. */
     private double weightsHeft;
@@ -40,15 +39,18 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param numberOfReps Number of repetitions in a set.
      * @param weightsHeft Heft of the weigths, in kilograms.
-     * @throws IllegalArgumentException <code>numberOfReps</code> isn't a positive number.
-     * @throws IllegalArgumentException <code>weightsHeft</code> isn't a positive number.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>numberOfReps</code> isn't positive.
+     * @throws ActivityException <code>weightsHeft</code> isn't positive.
      */
     public ActivityRepetitionWeighted(
             Duration executionTime,
             LocalDateTime executionDate,
             int bpm,
             int numberOfReps,
-            double weightsHeft) {
+            double weightsHeft)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps);
         this.setWeightsHeft(weightsHeft);
@@ -77,15 +79,20 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
      * Sets the weights heft of this activity.
      *
      * @param weightsHeft The weights heft of this activity.
-     * @throws IllegalArgumentException <code>weightsHeft</code> isn't a positive number.
+     * @throws ActivityException <code>weightsHeft</code> isn't positive.
      */
-    public void setWeightsHeft(double weightsHeft) {
-        if (weightsHeft <= 0)
-            throw new IllegalArgumentException("Weights' heft should be a positive number!");
+    public void setWeightsHeft(double weightsHeft) throws ActivityException {
+        if (weightsHeft <= 0) throw new ActivityException("Weights' heft should be positive!");
         this.weightsHeft = weightsHeft;
     }
 
+    @Override
     public abstract double countCalories(User user);
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.weightsHeft);
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -93,15 +100,12 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
         if (object == null || (this.getClass() != object.getClass())) return false;
 
         ActivityRepetitionWeighted activity = (ActivityRepetitionWeighted) object;
-        return (super.equals(activity) && this.weightsHeft == activity.getWeightsHeft());
+        return super.equals(activity) && this.weightsHeft == activity.getWeightsHeft();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(super.hashCode()), Double.valueOf(this.weightsHeft));
-    }
-
     public abstract ActivityRepetitionWeighted clone();
 
+    @Override
     public abstract String toString();
 }

@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package org.example.query;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.SortedSet;
-import org.example.activity.Activity;
-import org.example.activity.ActivityAltimetryDistance;
-import org.example.activity.ActivityDistance;
-import org.example.activity.ActivityMountainRun;
-import org.example.activity.ActivityPushUp;
-import org.example.activity.ActivityTrackRun;
-import org.example.user.BeginnerUser;
-import org.example.user.User;
-import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class QueryDistanceTest {
     @Test
-    public void test() {
+    public void accept() throws UserException, ActivityException {
         UserActivities activities = new UserActivities();
         SortedSet<Activity> done = activities.getDone();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
@@ -104,5 +95,13 @@ public class QueryDistanceTest {
         user.setActivities(new UserActivities());
         query.accept(user);
         assertEquals(query.getDistance(), 0.0);
+    }
+
+    @Test
+    public void testToString() {
+        LocalDateTime date = LocalDateTime.of(2030, 12, 25, 00, 00);
+        assertEquals(
+                (new QueryDistance(ActivityDistance.class, date, date)).toString(),
+                "QueryDistance(activityType = ActivityDistance, start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
     }
 }

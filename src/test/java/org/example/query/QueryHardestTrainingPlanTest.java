@@ -20,18 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.SortedSet;
 import org.junit.jupiter.api.Test;
 
-public class QueryMostCaloriesTest {
+public class QueryHardestTrainingPlanTest {
     @Test
-    public void accept() throws UserException, ActivityException {
+    public void accept() throws UserException, ActivityException, ActivityOverlapException {
         UserActivities activities = new UserActivities();
-        SortedSet<Activity> done = activities.getDone();
+        TrainingPlan plan = activities.getTrainingPlan();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
-        QueryMostCalories query =
-                new QueryMostCalories(
-                        LocalDateTime.MIN, LocalDateTime.of(2023, 12, 31, 23, 59, 59));
+        QueryHardestTrainingPlan query = new QueryHardestTrainingPlan();
 
         // 0
         assertEquals(query.getMaxUser(), null);
@@ -39,58 +36,36 @@ public class QueryMostCaloriesTest {
         // 1
         query.accept(user);
         assertEquals(query.getMaxUser().getCode(), 1);
-        assertEquals(query.getMaxCalories(), 0.0);
 
         // 2
         user.setCode(2);
-        done.add(
+        plan.addActivity(
                 new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 1, 0, 0, 0), 100, 50));
-        activities.setDone(done);
+                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 1, 0, 0, 0), 100, 50),
+                1);
+        activities.setTrainingPlan(plan);
         user.setActivities(activities);
 
         query.accept(user);
         assertEquals(query.getMaxUser().getCode(), 2);
-        assertEquals(query.getMaxCalories(), 125.0, 0.1);
 
         // 3
         user.setCode(3);
-        done.add(
+        plan.addActivity(
                 new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 2, 0, 0, 0), 100, 50));
-        activities.setDone(done);
+                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 2, 0, 10, 0), 100, 50),
+                1);
+        activities.setTrainingPlan(plan);
         user.setActivities(activities);
 
         query.accept(user);
         assertEquals(query.getMaxUser().getCode(), 3);
-        assertEquals(query.getMaxCalories(), 250.0, 0.1);
 
         // 4
         user.setCode(4);
-        done.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 1, 2, 0, 0, 0), 100, 50));
-        activities.setDone(done);
-        user.setActivities(activities);
-
-        query.accept(user);
-        assertEquals(query.getMaxUser().getCode(), 3);
-        assertEquals(query.getMaxCalories(), 250.0, 0.1);
-
-        // 5
-        user.setCode(5);
         user.setActivities(new UserActivities());
 
         query.accept(user);
         assertEquals(query.getMaxUser().getCode(), 3);
-        assertEquals(query.getMaxCalories(), 250.0, 0.1);
-    }
-
-    @Test
-    public void testToString() {
-        LocalDateTime date = LocalDateTime.of(2030, 12, 25, 00, 00);
-        assertEquals(
-                (new QueryMostCalories(date, date)).toString(),
-                "QueryMostCalories(start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
     }
 }

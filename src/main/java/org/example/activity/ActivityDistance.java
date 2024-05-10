@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
-/** A distance activity that can be executed by an user. */
+/** An activity that involves distance. */
 public abstract class ActivityDistance extends Activity {
     /** Distance of route to be traversed, in kilometers. */
     private double distanceToTraverse;
@@ -39,13 +38,13 @@ public abstract class ActivityDistance extends Activity {
      * @param executionDate When the activity was / will be executed.
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
-     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
      */
     public ActivityDistance(
-            Duration executionTime,
-            LocalDateTime executionDate,
-            int bpm,
-            double distanceToTraverse) {
+            Duration executionTime, LocalDateTime executionDate, int bpm, double distanceToTraverse)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm);
         this.setDistanceToTraverse(distanceToTraverse);
@@ -62,27 +61,33 @@ public abstract class ActivityDistance extends Activity {
     }
 
     /**
-     * Gets the distance to traverse of this activity.
+     * Gets the distance to traverse in this activity.
      *
-     * @return The distance to traverese of this activity.
+     * @return The distance to traverese in this activity.
      */
     public double getDistanceToTraverse() {
         return this.distanceToTraverse;
     }
 
     /**
-     * Sets the distance to traverse of this activity.
+     * Sets the distance to traverse in this activity.
      *
      * @param distanceToTraverse The distance to traverse of this activity, in kilometers.
-     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
+     * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
      */
-    public void setDistanceToTraverse(double distanceToTraverse) {
+    public void setDistanceToTraverse(double distanceToTraverse) throws ActivityException {
         if (distanceToTraverse <= 0)
-            throw new IllegalArgumentException("Distance to traverse should be a positive number!");
+            throw new ActivityException("Distance to traverse should be positive!");
         this.distanceToTraverse = distanceToTraverse;
     }
 
+    @Override
     public abstract double countCalories(User user);
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.distanceToTraverse);
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -90,17 +95,13 @@ public abstract class ActivityDistance extends Activity {
         if (object == null || (this.getClass() != object.getClass())) return false;
 
         ActivityDistance activity = (ActivityDistance) object;
-        return (super.equals(activity)
-                && this.distanceToTraverse == activity.getDistanceToTraverse());
+        return super.equals(activity)
+                && this.distanceToTraverse == activity.getDistanceToTraverse();
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(
-                Integer.valueOf(super.hashCode()), Double.valueOf(this.distanceToTraverse));
-    }
-
     public abstract ActivityDistance clone();
 
+    @Override
     public abstract String toString();
 }

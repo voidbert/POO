@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.example.activity;
+package org.example.fitness;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import org.example.user.User;
 
 /** A mountain run activity that can be executed by an user. */
 public class ActivityMountainRun extends ActivityAltimetryDistance {
@@ -36,15 +35,18 @@ public class ActivityMountainRun extends ActivityAltimetryDistance {
      * @param bpm Cardiac rhythm of the user while executing this activity.
      * @param distanceToTraverse Distance of the route to be traversed, in kilometers.
      * @param altimetry Altimetry difficulty level.
-     * @throws IllegalArgumentException <code>distanceToTraverse</code> isn't a positive number.
-     * @throws IllegalArgumentException <code>altimetry</code> isn't in [0.0; 1.0].
+     * @throws ActivityException <code>executionTime</code> lasts less than a second.
+     * @throws ActivityException <code>bpm</code> isn't positive.
+     * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
+     * @throws ActivityException <code>altimetry</code> not in [0.0; 1.0].
      */
     public ActivityMountainRun(
             Duration executionTime,
             LocalDateTime executionDate,
             int bpm,
             double distanceToTraverse,
-            double altimetry) {
+            double altimetry)
+            throws ActivityException {
 
         super(executionTime, executionDate, bpm, distanceToTraverse, altimetry);
     }
@@ -76,13 +78,13 @@ public class ActivityMountainRun extends ActivityAltimetryDistance {
     }
 
     @Override
-    public ActivityMountainRun clone() {
-        return new ActivityMountainRun(this);
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.getClass());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(Integer.valueOf(super.hashCode()), this.getClass());
+    public ActivityMountainRun clone() {
+        return new ActivityMountainRun(this);
     }
 
     @Override

@@ -16,14 +16,19 @@
 
 package org.example.fitness;
 
-/** The application to be built */
-public class Application {
+/** An exception thrown when activities overlap. */
+public class ActivityOverlapException extends Exception {
+    /** Constructor for ActivityOverlapException with the default message. */
+    public ActivityOverlapException() {
+        super("Overlapping activities!");
+    }
+
     /**
-     * The entry point to the application program.
+     * Constructor for ActivityOverlapException.
      *
-     * @param args Application startup arguments.
+     * @param msg Exception message.
      */
-    public static void main(String[] args) {
-        Fitness fitness = new Fitness();
+    public ActivityOverlapException(String msg) {
+        super(msg);
     }
 }

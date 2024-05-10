@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-package org.example.user;
+package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.example.useractivities.UserActivities;
 import org.junit.jupiter.api.Test;
 
 public class UserTest {
+    private User reference;
+
+    public UserTest() throws UserException {
+        this.reference =
+                new IntermediateUser(
+                        1,
+                        "José Lopes",
+                        "UMinho",
+                        "a104541@alunos.uminho.pt",
+                        80,
+                        new UserActivities());
+    }
+
     @Test
-    public void testEquals() {
+    public void testEquals() throws UserException {
+        // Test 1
         final User beginner =
                 new BeginnerUser(
                         1,
@@ -54,31 +68,43 @@ public class UserTest {
         assertNotEquals(beginner, intermediate);
         assertNotEquals(beginner, advanced);
         assertNotEquals(intermediate, advanced);
+
+        // Test 2
+        User copy = this.reference.clone();
+        assertEquals(copy, this.reference);
+
+        copy.setCode(2);
+        assertNotEquals(copy, this.reference);
     }
 
-    public void setAverageBPM() {
-        User user =
-                new IntermediateUser(
-                        1,
-                        "José Lopes",
-                        "UMinho",
-                        "a104541@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
+    @Test
+    public void testHashCode() {
+        User copy = this.reference.clone();
 
+        assertEquals(this.reference.hashCode(), copy.hashCode());
+
+        copy.setName("José Lopes");
+        assertEquals(this.reference.hashCode(), copy.hashCode());
+
+        copy.setCode(2);
+        assertNotEquals(this.reference.hashCode(), copy.hashCode());
+    }
+
+    @Test
+    public void setAverageBPM() {
         assertThrows(
-                RuntimeException.class,
+                UserException.class,
                 () -> {
-                    user.setAverageBPM(0);
+                    this.reference.setAverageBPM(0);
                 });
         assertThrows(
-                RuntimeException.class,
+                UserException.class,
                 () -> {
-                    user.setAverageBPM(-1);
+                    this.reference.setAverageBPM(-1);
                 });
         assertDoesNotThrow(
                 () -> {
-                    user.setAverageBPM(60);
+                    this.reference.setAverageBPM(60);
                 });
     }
 }
