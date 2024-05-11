@@ -246,6 +246,7 @@ public class FitnessView {
                                 new String[] {
                                     "Date",
                                     "Duration",
+                                    "Calories",
                                     "Class",
                                     "BPM",
                                     "Repetitions",
@@ -253,14 +254,14 @@ public class FitnessView {
                                     "Distance",
                                     "Altimetry"
                                 };
-                        format = "%-20s %8s %-25s %5s %11s %6s %8s %9s\n";
+                        format = "%-20s %8s %8s %-25s %5s %11s %6s %8s %9s\n";
 
                         try {
                             if (i == 1) entities = this.controller.getTodoActivities(code);
                             else if (i == 2) entities = this.controller.getDoneActivities(code);
                             else if (i == 3) {
                                 showPlanDays(code);
-                                format = "%-10s %8s %-25s %9s %5s %11s %6s %8s %9s\n";
+                                format = "%-10s %8s %8s %9s %-25s %5s %11s %6s %8s %9s\n";
 
                                 List<String> headerMod =
                                         new ArrayList<String>(Arrays.asList(header));
@@ -315,13 +316,13 @@ public class FitnessView {
                                             "Must be y/n!",
                                             s -> s.equals("y") || s.equals("n"),
                                             s -> s.equals("y") ? true : false)) days.add(day);
+                        }
 
-                            try {
-                                this.controller.setTrainingPlanDays(code, days);
-                                System.out.println("Successful operation!");
-                            } catch (FitnessControllerException e) {
-                                System.err.println(e.getMessage());
-                            }
+                        try {
+                            this.controller.setTrainingPlanDays(code, days);
+                            System.out.println("Successful operation!");
+                        } catch (FitnessControllerException e) {
+                            System.err.println(e.getMessage());
                         }
                     } else {
                         this.controller.removeUser(code);

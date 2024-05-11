@@ -229,11 +229,12 @@ public class FitnessController {
     /**
      * Transforms a set of activities into a list of entries that a view can show.
      *
+     * @param user User used for calory counting.
      * @param activities Set of activities to be shown.
      * @returns For each activity, its fields (class, duration, date, bpm, reps, weight, distance,
      *     altimetry).
      */
-    private List<String[]> showActivities(SortedSet<Activity> activities) {
+    private List<String[]> showActivities(User user, SortedSet<Activity> activities) {
         List<String[]> ret = new ArrayList<String[]>();
         for (Activity a : activities) {
             String[] fields =
@@ -241,6 +242,7 @@ public class FitnessController {
                         a.getExecutionDate()
                                 .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
                         Long.toString(a.getExecutionTime().toMinutes()),
+                        Double.toString(a.countCalories(user)),
                         a.getClass().getSimpleName(),
                         Integer.toString(a.getBPM()),
                         "",
@@ -252,13 +254,13 @@ public class FitnessController {
             SortedSet<ActivityExtraField> extraFields =
                     this.activityFields.get(a.getClass().getSimpleName());
             if (extraFields.contains(ActivityExtraField.REPETITIONS))
-                fields[4] = Integer.toString(((ActivityRepetition) a).getNumberOfReps());
+                fields[5] = Integer.toString(((ActivityRepetition) a).getNumberOfReps());
             if (extraFields.contains(ActivityExtraField.WEIGHT))
-                fields[5] = Double.toString(((ActivityRepetitionWeighted) a).getWeightsHeft());
+                fields[6] = Double.toString(((ActivityRepetitionWeighted) a).getWeightsHeft());
             if (extraFields.contains(ActivityExtraField.DISTANCE))
-                fields[6] = Double.toString(((ActivityDistance) a).getDistanceToTraverse());
+                fields[7] = Double.toString(((ActivityDistance) a).getDistanceToTraverse());
             if (extraFields.contains(ActivityExtraField.ALTIMETRY))
-                fields[7] = Double.toString(((ActivityAltimetryDistance) a).getAltimetry());
+                fields[8] = Double.toString(((ActivityAltimetryDistance) a).getAltimetry());
 
             ret.add(fields);
         }
@@ -270,13 +272,13 @@ public class FitnessController {
      *
      * @param userCode Identifier code of the user to get the activities from.
      * @throws FitnessControllerException User not found.
-     * @return For each activity, its fields (date, duration, class, bpm, reps, weight, distance,
-     *     altimetry).
+     * @return For each activity, its fields (date, duration, calories, class, bpm, reps, weight,
+     *     distance, altimetry).
      */
     public List<String[]> getTodoActivities(long userCode) throws FitnessControllerException {
         User user = this.model.getUser(userCode);
         if (user == null) throw new FitnessControllerException("User doesn't exist!");
-        return this.showActivities(user.getActivities().getTodo());
+        return this.showActivities(user, user.getActivities().getTodo());
     }
 
     /**
@@ -284,13 +286,13 @@ public class FitnessController {
      *
      * @param userCode Identifier code of the user to get the activities from.
      * @throws FitnessControllerException User not found.
-     * @return For each activity, its fields (date, duration, class, bpm, reps, weight, distance,
-     *     altimetry).
+     * @return For each activity, its fields (date, duration, calories, class, bpm, reps, weight,
+     *     distance, altimetry).
      */
     public List<String[]> getDoneActivities(long userCode) throws FitnessControllerException {
         User user = this.model.getUser(userCode);
         if (user == null) throw new FitnessControllerException("User doesn't exist!");
-        return this.showActivities(user.getActivities().getDone());
+        return this.showActivities(user, user.getActivities().getDone());
     }
 
     /**
@@ -312,8 +314,8 @@ public class FitnessController {
      *
      * @param userCode Identifier code of the user to get the activities from.
      * @throws FitnessControllerException User not found.
-     * @return For each activity, its fields (date, duration, plan repetitions, class, bpm, reps,
-     *     weight, distance, altimetry).
+     * @return For each activity, its fields (date, duration, plan repetitions, calories, class,
+     *     bpm, reps, weight, distance, altimetry).
      */
     public List<String[]> getPlanActivities(long userCode) throws FitnessControllerException {
         User user = this.model.getUser(userCode);
@@ -327,11 +329,12 @@ public class FitnessController {
 
             List<String> fields =
                     new ArrayList<String>(
-                            Arrays.asList(this.showActivities(single).iterator().next()));
+                            Arrays.asList(this.showActivities(user, single).iterator().next()));
             fields.set(
                     0,
                     entry.getKey().getExecutionDate().format(DateTimeFormatter.ofPattern("HH:mm")));
             fields.add(3, Integer.toString(entry.getValue()));
+            fields.set(2, Double.toString(Double.parseDouble(fields.get(2)) * entry.getValue()));
             ret.add(fields.toArray(String[]::new));
         }
 
