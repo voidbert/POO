@@ -25,7 +25,7 @@ public class Application {
      */
     public static void main(String[] args) {
         FitnessModel model = new FitnessModel();
-        FitnessController controller = new FitnessController();
+        FitnessController controller = new FitnessController(model);
         FitnessView view = new FitnessView(controller);
         view.run();
     }
