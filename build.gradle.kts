@@ -34,6 +34,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.named<JavaCompile>("compileJava") {
+    options.compilerArgs.add("-Xlint:unchecked")
+}
+
 tasks.named<JavaExec>("run") {
     standardInput = System.`in`
 }

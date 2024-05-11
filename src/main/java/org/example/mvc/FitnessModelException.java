@@ -16,17 +16,15 @@
 
 package org.example.fitness;
 
-/** The application to be built */
-public class Application {
+/** An exception thrown by <code>FitnessModel</code>. */
+public class FitnessModelException extends Exception {
+
     /**
-     * The entry point to the fitness application.
+     * Constructor for FitnessControllerModel.
      *
-     * @param args Application startup arguments.
+     * @param msg Exception message.
      */
-    public static void main(String[] args) {
-        FitnessModel model = new FitnessModel();
-        FitnessController controller = new FitnessController();
-        FitnessView view = new FitnessView(controller);
-        view.run();
+    public FitnessModelException(String msg) {
+        super(msg);
     }
 }

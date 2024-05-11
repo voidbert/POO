@@ -282,8 +282,9 @@ public class TrainingPlan implements Serializable {
      */
     public double countCalories(User user) {
         return this.activities.entrySet().stream()
-                .mapToDouble(e -> e.getKey().countCalories(user) * e.getValue())
-                .sum();
+                        .mapToDouble(e -> e.getKey().countCalories(user) * e.getValue())
+                        .sum()
+                * this.repetitions.size();
     }
 
     /**

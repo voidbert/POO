@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 
-public class FitnessTest {
-    private Fitness fitness;
+public class FitnessModelTest {
+    private FitnessModel fitness;
 
-    public FitnessTest() throws UserException {
+    public FitnessModelTest() throws UserException {
         User u1 =
                 new BeginnerUser(
                         1,
@@ -53,28 +53,29 @@ public class FitnessTest {
                         95,
                         new UserActivities());
 
-        Map<Integer, User> users = new TreeMap<Integer, User>();
-        users.put(1, u1);
-        users.put(2, u2);
-        users.put(3, u3);
-        fitness = new Fitness(users, LocalDateTime.of(2024, 1, 1, 0, 0, 0));
+        Map<Long, User> users = new TreeMap<Long, User>();
+        users.put(1L, u1);
+        users.put(2L, u2);
+        users.put(3L, u3);
+        fitness = new FitnessModel(users, LocalDateTime.of(2024, 1, 1, 0, 0, 0));
     }
 
     @Test
     public void testClone() {
-        Fitness copy = this.fitness.clone();
+        FitnessModel copy = this.fitness.clone();
         assertEquals(this.fitness.getUsers(), copy.getUsers());
         assertEquals(this.fitness.getNow(), copy.getNow());
     }
 
     @Test
     public void serialize() {
-        Fitness copy = fitness.clone();
+        FitnessModel copy = fitness.clone();
         try {
             copy.saveToFile("/tmp/POO.bin");
             copy.loadFromFile("/tmp/POO.bin");
             assertEquals(fitness, copy);
         } catch (Exception e) {
+            System.err.println(e.toString());
             assertTrue(false);
         }
     }

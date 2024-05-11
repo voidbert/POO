@@ -39,23 +39,20 @@ public class MenuTest {
         };
         Menu menu = new Menu(entries);
 
-        System.setIn(new ByteArrayInputStream("0\n".getBytes()));
+        System.setIn(new ByteArrayInputStream("0\n1\n".getBytes()));
         menu.run();
-        assertEquals(chosen[0], -1);
+        assertEquals(chosen[0], 0);
 
-        chosen[0] = -1;
         System.setIn(new ByteArrayInputStream("1\n".getBytes()));
         menu.run();
         assertEquals(chosen[0], 0);
 
-        chosen[0] = -1;
         System.setIn(new ByteArrayInputStream("2\n".getBytes()));
         menu.run();
         assertEquals(chosen[0], 1);
 
-        chosen[0] = -1;
-        System.setIn(new ByteArrayInputStream("3\n".getBytes()));
+        System.setIn(new ByteArrayInputStream("3\n2\n".getBytes()));
         menu.run();
-        assertEquals(chosen[0], -1);
+        assertEquals(chosen[0], 1);
     }
 }

@@ -18,8 +18,11 @@ package org.example.fitness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.TreeSet;
 import org.junit.jupiter.api.Test;
 
 public class QueryHardestTrainingPlanTest {
@@ -27,6 +30,8 @@ public class QueryHardestTrainingPlanTest {
     public void accept() throws UserException, ActivityException, ActivityOverlapException {
         UserActivities activities = new UserActivities();
         TrainingPlan plan = activities.getTrainingPlan();
+        plan.setRepetitions(
+                new TreeSet<DayOfWeek>(Arrays.asList(new DayOfWeek[] {DayOfWeek.MONDAY})));
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
         QueryHardestTrainingPlan query = new QueryHardestTrainingPlan();
 

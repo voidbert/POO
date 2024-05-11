@@ -17,9 +17,6 @@
 package org.example.fitness;
 
 import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
 
 /** An options menu for the application. */
 public class Menu {
@@ -61,7 +58,7 @@ public class Menu {
     /**
      * Sets this menu's entries.
      *
-     * @param enries This menu's entries.
+     * @param entries This menu's entries.
      */
     public void setEntries(MenuEntry[] entries) {
         this.entries = Arrays.stream(entries).map(MenuEntry::clone).toArray(MenuEntry[]::new);
@@ -69,35 +66,20 @@ public class Menu {
 
     /** Runs this menu. */
     public void run() {
-        Scanner input = new Scanner(System.in);
+        UserInput input = new UserInput();
 
-        System.out.println("Choose an option ...\n");
+        System.out.println("\nChoose an option ...\n");
         for (int i = 0; i < this.entries.length; ++i) {
             System.out.println(String.format("  %d -> %s", i + 1, entries[i].getText()));
         }
         System.out.println("");
 
-        boolean success = false;
-        do {
-            try {
-                System.out.print("> ");
-                int option = input.nextInt();
-                if (option > 0 && option <= this.entries.length) {
-                    this.entries[option - 1].getHandler().accept(option - 1);
-                    success = true;
-                }
-            } catch (InputMismatchException e) {
-                input.nextLine();
-            } catch (NoSuchElementException e) {
-                success = true; // User wants to leave (Ctrl + D)
-            }
-
-            if (!success) {
-                System.err.println("Not an integer not in range!");
-            }
-        } while (!success);
-
-        input.close();
+        int option =
+                input.readInt(
+                        "Option > ",
+                        String.format("Must be an integer betwewn 1 and %d!", this.entries.length),
+                        i -> i > 0 && i <= this.entries.length);
+        this.entries[option - 1].getHandler().accept(option - 1);
     }
 
     /**

@@ -191,7 +191,7 @@ public class TrainingPlanTest {
     @Test
     public void countCalories() {
         assertEquals((new TrainingPlan()).countCalories(new BeginnerUser()), 0);
-        assertEquals(this.plan.countCalories(new BeginnerUser()), 1486.8, 0.1);
+        assertEquals(this.plan.countCalories(new BeginnerUser()), 2973.5, 0.1);
     }
 
     @Test

@@ -21,9 +21,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /** A query that determines the activity that was executed the most times. */
-public class QueryMostCommonActivity {
+public class QueryMostCommonActivity implements Consumer<User> {
     /** Relation between activity class names and their number of occurrences. */
     private Map<String, Integer> activities;
 

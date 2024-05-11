@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /** A weight lifting activity that can be executed by an user. */
-public class ActivityWeightLifting extends ActivityRepetitionWeighted implements ActivityHard {
+public class ActivityWeightLifting extends ActivityRepetitionWeighted {
     /** Creates a new empty weight lifting activity. */
     public ActivityWeightLifting() {
         super();
