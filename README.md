@@ -15,4 +15,4 @@ For developers, the following commands may be useful:
 
  - Run unit tests: `./gradlew test`
  - Generate documentation: `./gradlew javadoc`
- - Format code: `gradle spotlessApply`
+ - Format code: `./gradlew spotlessApply`
