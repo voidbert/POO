@@ -16,31 +16,32 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActivityWeightLiftingTest {
     private ActivityWeightLifting weightLifting;
 
     public ActivityWeightLiftingTest() throws ActivityException {
-        this.weightLifting =
-                new ActivityWeightLifting(
-                        Duration.ofMinutes(5), LocalDateTime.of(2024, 5, 5, 11, 14), 90, 15, 30);
+        this.weightLifting = new ActivityWeightLifting(Duration.ofMinutes(5),
+                                                       LocalDateTime.of(2024, 5, 5, 11, 14),
+                                                       90,
+                                                       15,
+                                                       30);
     }
 
     @Test
     public void countCalories() throws UserException {
-        final IntermediateUser intermediate =
-                new IntermediateUser(
-                        1,
-                        "José Lopes",
-                        "UMinho",
-                        "a104541@alunos.uminho.pt",
-                        60,
-                        new UserActivities());
+        final IntermediateUser intermediate = new IntermediateUser(1,
+                                                                   "José Lopes",
+                                                                   "UMinho",
+                                                                   "a104541@alunos.uminho.pt",
+                                                                   60,
+                                                                   new UserActivities());
         assertEquals(this.weightLifting.countCalories(intermediate), 59.1, 0.1);
     }
 
@@ -57,8 +58,8 @@ public class ActivityWeightLiftingTest {
     @Test
     public void testToString() {
         assertEquals(
-                this.weightLifting.toString(),
-                "ActivityWeightLifting(executionTime = \"PT5M\", executionDate = \"2024-05-05T11:14\", bpm = 90, numberOfReps = 15, weightsHeft = 30.00)");
+            this.weightLifting.toString(),
+            "ActivityWeightLifting(executionTime = \"PT5M\", executionDate = \"2024-05-05T11:14\", bpm = 90, numberOfReps = 15, weightsHeft = 30.00)");
     }
 
     @Test

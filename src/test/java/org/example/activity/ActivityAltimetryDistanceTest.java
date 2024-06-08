@@ -16,21 +16,22 @@
 
 package org.example.fitness;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.Test;
 
 public class ActivityAltimetryDistanceTest {
     private ActivityAltimetryDistance altimetryDistance;
 
     public ActivityAltimetryDistanceTest() throws ActivityException {
         this.altimetryDistance =
-                new ActivityMountainRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20, 0.5);
+            new ActivityMountainRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20, 0.5);
     }
 
     @Test
@@ -40,37 +41,23 @@ public class ActivityAltimetryDistanceTest {
 
         try {
             clone.setAltimetry(0.999);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.altimetryDistance);
 
         clone = this.altimetryDistance.clone();
         try {
             clone.setBPM(100);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.altimetryDistance);
     }
 
     @Test
     public void setAltimetry() {
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.altimetryDistance.setAltimetry(-0.001);
-                });
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.altimetryDistance.setAltimetry(1.001);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.altimetryDistance.setAltimetry(0.0);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.altimetryDistance.setAltimetry(1.0);
-                });
+        assertThrows(ActivityException.class,
+                     () -> { this.altimetryDistance.setAltimetry(-0.001); });
+        assertThrows(ActivityException.class,
+                     () -> { this.altimetryDistance.setAltimetry(1.001); });
+        assertDoesNotThrow(() -> { this.altimetryDistance.setAltimetry(0.0); });
+        assertDoesNotThrow(() -> { this.altimetryDistance.setAltimetry(1.0); });
     }
 }

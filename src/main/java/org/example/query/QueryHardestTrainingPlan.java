@@ -29,7 +29,7 @@ public class QueryHardestTrainingPlan implements Consumer<User> {
 
     /** Creates a new query. */
     public QueryHardestTrainingPlan() {
-        this.maxUser = null;
+        this.maxUser     = null;
         this.maxCalories = -1;
     }
 
@@ -39,7 +39,7 @@ public class QueryHardestTrainingPlan implements Consumer<User> {
      * @param query Query to be copied.
      */
     public QueryHardestTrainingPlan(QueryHardestTrainingPlan query) {
-        this.maxUser = query.getMaxUser();
+        this.maxUser     = query.getMaxUser();
         this.maxCalories = query.getMaxCalories();
     }
 
@@ -50,8 +50,10 @@ public class QueryHardestTrainingPlan implements Consumer<User> {
      *     provided.
      */
     public User getMaxUser() {
-        if (this.maxUser != null) return this.maxUser.clone();
-        else return null;
+        if (this.maxUser != null)
+            return this.maxUser.clone();
+        else
+            return null;
     }
 
     /**
@@ -73,7 +75,7 @@ public class QueryHardestTrainingPlan implements Consumer<User> {
         double calories = user.getActivities().getTrainingPlan().countCalories(user);
         if (calories > this.maxCalories) {
             this.maxCalories = calories;
-            this.maxUser = user.clone();
+            this.maxUser     = user.clone();
         }
     }
 
@@ -95,12 +97,14 @@ public class QueryHardestTrainingPlan implements Consumer<User> {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         QueryHardestTrainingPlan query = (QueryHardestTrainingPlan) obj;
-        return this.maxUser.equals(query.getMaxUser())
-                && this.maxCalories == query.getMaxCalories();
+        return this.maxUser.equals(query.getMaxUser()) &&
+            this.maxCalories == query.getMaxCalories();
     }
 
     /**

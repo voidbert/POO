@@ -31,7 +31,7 @@ public abstract class QueryBetweenDates implements Consumer<User> {
     /** Creates a new query without date restrictions. */
     public QueryBetweenDates() {
         this.start = LocalDateTime.MIN;
-        this.end = LocalDateTime.MAX;
+        this.end   = LocalDateTime.MAX;
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class QueryBetweenDates implements Consumer<User> {
      */
     public QueryBetweenDates(LocalDateTime start, LocalDateTime end) {
         this.start = start;
-        this.end = end;
+        this.end   = end;
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class QueryBetweenDates implements Consumer<User> {
      */
     public QueryBetweenDates(QueryBetweenDates query) {
         this.start = query.getStart();
-        this.end = query.getEnd();
+        this.end   = query.getEnd();
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class QueryBetweenDates implements Consumer<User> {
      */
     protected boolean activityFits(Activity activity) {
         LocalDateTime end =
-                activity.getExecutionDate().plusSeconds(activity.getExecutionTime().toSeconds());
+            activity.getExecutionDate().plusSeconds(activity.getExecutionTime().toSeconds());
         return end.isAfter(this.start) && end.isBefore(this.end);
     }
 
@@ -103,8 +103,10 @@ public abstract class QueryBetweenDates implements Consumer<User> {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         QueryBetweenDates query = (QueryBetweenDates) obj;
         return this.start.equals(query.start) && this.end.equals(query.end);

@@ -38,9 +38,10 @@ public class ActivityTrackRun extends ActivityDistance {
      * @throws ActivityException <code>bpm</code> isn't positive.
      * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
      */
-    public ActivityTrackRun(
-            Duration executionTime, LocalDateTime executionDate, int bpm, double distanceToTraverse)
-            throws ActivityException {
+    public ActivityTrackRun(Duration      executionTime,
+                            LocalDateTime executionDate,
+                            int           bpm,
+                            double        distanceToTraverse) throws ActivityException {
 
         super(executionTime, executionDate, bpm, distanceToTraverse);
     }
@@ -58,12 +59,16 @@ public class ActivityTrackRun extends ActivityDistance {
     public double countCalories(User user) {
         double MET; /* Metabolic Equivalent of Task */
         double kmPerHour =
-                this.getDistanceToTraverse() / (this.getExecutionTime().toSeconds() / 3600.0);
+            this.getDistanceToTraverse() / (this.getExecutionTime().toSeconds() / 3600.0);
 
-        if (kmPerHour <= 6.7593) MET = 6.5;
-        else if (kmPerHour <= 12.0701) MET = 11.8;
-        else if (kmPerHour <= 15.4497) MET = 14.8;
-        else MET = 18.0; /* High competition track racing */
+        if (kmPerHour <= 6.7593)
+            MET = 6.5;
+        else if (kmPerHour <= 12.0701)
+            MET = 11.8;
+        else if (kmPerHour <= 15.4497)
+            MET = 14.8;
+        else
+            MET = 18.0; /* High competition track racing */
 
         return MET * this.getBPM() * this.getDistanceToTraverse() * user.getCalorieMultiplier();
     }
@@ -81,10 +86,10 @@ public class ActivityTrackRun extends ActivityDistance {
     @Override
     public String toString() {
         return String.format(
-                "ActivityTrackRun(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, distanceToTraverse = %.3f)",
-                this.getExecutionTime().toString(),
-                this.getExecutionDate().toString(),
-                this.getBPM(),
-                this.getDistanceToTraverse());
+            "ActivityTrackRun(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, distanceToTraverse = %.3f)",
+            this.getExecutionTime().toString(),
+            this.getExecutionDate().toString(),
+            this.getBPM(),
+            this.getDistanceToTraverse());
     }
 }

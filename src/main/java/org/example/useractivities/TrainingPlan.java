@@ -47,7 +47,7 @@ public class TrainingPlan implements Serializable {
 
     /** Creates a new empty training plan. */
     public TrainingPlan() {
-        this.activities = new TreeMap<Activity, Integer>();
+        this.activities  = new TreeMap<Activity, Integer>();
         this.repetitions = new TreeSet<DayOfWeek>();
     }
 
@@ -60,7 +60,7 @@ public class TrainingPlan implements Serializable {
      * @throws ActivityOverlapException There are overlapping <code>activities</code>.
      */
     public TrainingPlan(Map<Activity, Integer> activities, Set<DayOfWeek> repetitions)
-            throws ActivityOverlapException {
+        throws ActivityOverlapException {
         this(); // Fix NullPointerException during this.getActivities in this.setActivities.
         this.setActivities(activities);
         this.setRepetitions(repetitions);
@@ -72,7 +72,7 @@ public class TrainingPlan implements Serializable {
      * @param plan Training plan to be copied.
      */
     public TrainingPlan(TrainingPlan plan) {
-        this.activities = plan.getActivities();
+        this.activities  = plan.getActivities();
         this.repetitions = plan.getRepetitions();
     }
 
@@ -83,13 +83,9 @@ public class TrainingPlan implements Serializable {
      *     by execution date. The YYYY/MM/DD part of the dates of activities will be 0001/01/01.
      */
     public SortedMap<Activity, Integer> getActivities() {
-        return this.activities.entrySet().stream()
-                .collect(
-                        Collectors.toMap(
-                                e -> e.getKey().clone(),
-                                e -> e.getValue(),
-                                (o1, o2) -> o1,
-                                TreeMap::new));
+        return this.activities.entrySet().stream().collect(
+            Collectors
+                .toMap(e -> e.getKey().clone(), e -> e.getValue(), (o1, o2) -> o1, TreeMap::new));
     }
 
     /**
@@ -120,11 +116,7 @@ public class TrainingPlan implements Serializable {
     private boolean overlapsDaytimeOnly(Activity activity) {
         Activity normalizedDateActivity = activity.clone();
         normalizedDateActivity.setExecutionDate(
-                normalizedDateActivity
-                        .getExecutionDate()
-                        .withDayOfMonth(1)
-                        .withMonth(1)
-                        .withYear(1));
+            normalizedDateActivity.getExecutionDate().withDayOfMonth(1).withMonth(1).withYear(1));
         Iterator<Map.Entry<Activity, Integer>> i = this.activities.entrySet().iterator();
 
         boolean overlaps = false;
@@ -132,14 +124,12 @@ public class TrainingPlan implements Serializable {
             Map.Entry<Activity, Integer> current = i.next();
 
             Activity repeatActivity = current.getKey().clone();
-            Duration repeat =
-                    Duration.ofSeconds(
-                            repeatActivity.getExecutionTime().toSeconds() * current.getValue());
+            Duration repeat = Duration.ofSeconds(repeatActivity.getExecutionTime().toSeconds() *
+                                                 current.getValue());
 
             try {
                 repeatActivity.setExecutionTime(repeat);
-            } catch (ActivityException e) {
-            } // repeat > 0 because getExecutionTime() > 0
+            } catch (ActivityException e) {} // repeat > 0 because getExecutionTime() > 0
 
             if (repeatActivity.overlaps(normalizedDateActivity)) {
                 overlaps = true;
@@ -156,7 +146,8 @@ public class TrainingPlan implements Serializable {
      * @return Whether <code>activity</code> overlaps with any activity in this training plan.
      */
     public boolean overlaps(Activity activity) {
-        if (!this.repetitions.contains(activity.getExecutionDate().getDayOfWeek())) return false;
+        if (!this.repetitions.contains(activity.getExecutionDate().getDayOfWeek()))
+            return false;
         return this.overlapsDaytimeOnly(activity);
     }
 
@@ -173,26 +164,24 @@ public class TrainingPlan implements Serializable {
     public void addActivity(Activity activity, Integer times) throws ActivityOverlapException {
         if (times <= 0) {
             throw new ActivityOverlapException(
-                    "Non-positive number of activity executions! Negative overlap.");
+                "Non-positive number of activity executions! Negative overlap.");
         }
 
         Activity repeatActivity = activity.clone();
         Duration repeat = Duration.ofSeconds(activity.getExecutionTime().toSeconds() * times);
         try {
             repeatActivity.setExecutionTime(repeat);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
 
         repeatActivity.setExecutionDate(
-                repeatActivity.getExecutionDate().withDayOfMonth(1).withMonth(1).withYear(1));
+            repeatActivity.getExecutionDate().withDayOfMonth(1).withMonth(1).withYear(1));
         if (this.overlapsDaytimeOnly(repeatActivity)) {
             throw new ActivityOverlapException();
         }
 
         try {
             repeatActivity.setExecutionTime(activity.getExecutionTime());
-        } catch (ActivityException e) {
-        } // getExecutionTime() > 0
+        } catch (ActivityException e) {} // getExecutionTime() > 0
         this.activities.put(repeatActivity, times);
     }
 
@@ -203,9 +192,9 @@ public class TrainingPlan implements Serializable {
      * @throws ActivityDoesntExistException <code>index</code> out of range.
      */
     public void removeActivity(int index) throws ActivityDoesntExistException {
-        boolean removed = false;
-        int count = 0;
-        Iterator<Activity> i = this.activities.keySet().iterator();
+        boolean            removed = false;
+        int                count   = 0;
+        Iterator<Activity> i       = this.activities.keySet().iterator();
         while (i.hasNext() && !removed) {
             Activity a = i.next();
             if (count == index) {
@@ -230,7 +219,7 @@ public class TrainingPlan implements Serializable {
      */
     public void setActivities(Map<Activity, Integer> activities) throws ActivityOverlapException {
         SortedMap<Activity, Integer> previous = this.getActivities();
-        this.activities = new TreeMap<Activity, Integer>();
+        this.activities                       = new TreeMap<Activity, Integer>();
 
         try {
             for (Map.Entry<Activity, Integer> current : activities.entrySet()) {
@@ -256,12 +245,11 @@ public class TrainingPlan implements Serializable {
                 for (Map.Entry<Activity, Integer> current : this.activities.entrySet()) {
                     for (int i = 0; i < current.getValue(); ++i) {
                         Activity a = current.getKey().clone();
-                        a.setExecutionDate(
-                                a.getExecutionDate()
-                                        .withDayOfMonth(d.getDayOfMonth())
-                                        .withMonth(d.getMonthValue())
-                                        .withYear(d.getYear())
-                                        .plusSeconds(a.getExecutionTime().toSeconds() * i));
+                        a.setExecutionDate(a.getExecutionDate()
+                                               .withDayOfMonth(d.getDayOfMonth())
+                                               .withMonth(d.getMonthValue())
+                                               .withYear(d.getYear())
+                                               .plusSeconds(a.getExecutionTime().toSeconds() * i));
 
                         LocalDateTime end = a.getEndDate();
                         if (end.isBefore(goal) || end.isEqual(goal)) {
@@ -281,10 +269,11 @@ public class TrainingPlan implements Serializable {
      * @return The calories burned by executing this training plan.
      */
     public double countCalories(User user) {
-        return this.activities.entrySet().stream()
-                        .mapToDouble(e -> e.getKey().countCalories(user) * e.getValue())
-                        .sum()
-                * this.repetitions.size();
+        return this.activities.entrySet()
+                   .stream()
+                   .mapToDouble(e -> e.getKey().countCalories(user) * e.getValue())
+                   .sum() *
+            this.repetitions.size();
     }
 
     /**
@@ -305,12 +294,14 @@ public class TrainingPlan implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         TrainingPlan plan = (TrainingPlan) obj;
-        return this.activities.equals(plan.getActivities())
-                && this.repetitions.equals(plan.getRepetitions());
+        return this.activities.equals(plan.getActivities()) &&
+            this.repetitions.equals(plan.getRepetitions());
     }
 
     /**
@@ -330,8 +321,8 @@ public class TrainingPlan implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format(
-                "TrainingPlan(activities = %s, repetitions = %s)",
-                this.activities.toString(), this.repetitions.toString());
+        return String.format("TrainingPlan(activities = %s, repetitions = %s)",
+                             this.activities.toString(),
+                             this.repetitions.toString());
     }
 }

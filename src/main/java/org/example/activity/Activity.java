@@ -36,7 +36,7 @@ public abstract class Activity implements Serializable, Comparable {
     public Activity() {
         this.executionTime = Duration.ofSeconds(1);
         this.executionDate = LocalDateTime.MIN;
-        this.bpm = 1;
+        this.bpm           = 1;
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class Activity implements Serializable, Comparable {
      * @throws ActivityException <code>bpm</code> isn't positive.
      */
     public Activity(Duration executionTime, LocalDateTime executionDate, int bpm)
-            throws ActivityException {
+        throws ActivityException {
         this.setExecutionTime(executionTime);
         this.executionDate = executionDate;
         this.setBPM(bpm);
@@ -63,7 +63,7 @@ public abstract class Activity implements Serializable, Comparable {
     public Activity(Activity activity) {
         this.executionTime = activity.getExecutionTime();
         this.executionDate = activity.getExecutionDate();
-        this.bpm = activity.getBPM();
+        this.bpm           = activity.getBPM();
     }
 
     /**
@@ -130,7 +130,8 @@ public abstract class Activity implements Serializable, Comparable {
      * @throws ActivityException <code>bpm</code> isn't positive.
      */
     public void setBPM(int bpm) throws ActivityException {
-        if (bpm <= 0) throw new ActivityException("Average BPM during exercise must be positive!");
+        if (bpm <= 0)
+            throw new ActivityException("Average BPM during exercise must be positive!");
         this.bpm = bpm;
     }
 
@@ -141,10 +142,10 @@ public abstract class Activity implements Serializable, Comparable {
      * @return Whether if this activity overlaps another activity.
      */
     public boolean overlaps(Activity activity) {
-        LocalDateTime thisStart = this.executionDate;
-        LocalDateTime thisEnd = this.getEndDate();
+        LocalDateTime thisStart     = this.executionDate;
+        LocalDateTime thisEnd       = this.getEndDate();
         LocalDateTime activityStart = activity.getExecutionDate();
-        LocalDateTime activityEnd = activity.getEndDate();
+        LocalDateTime activityEnd   = activity.getEndDate();
 
         return thisStart.isBefore(activityEnd) && activityStart.isBefore(thisEnd);
     }
@@ -175,13 +176,15 @@ public abstract class Activity implements Serializable, Comparable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || (this.getClass() != obj.getClass())) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || (this.getClass() != obj.getClass()))
+            return false;
 
         Activity activity = (Activity) obj;
-        return (this.executionTime.equals(activity.getExecutionTime())
-                && this.executionDate.equals(activity.getExecutionDate())
-                && this.bpm == activity.getBPM());
+        return (this.executionTime.equals(activity.getExecutionTime()) &&
+                this.executionDate.equals(activity.getExecutionDate()) &&
+                this.bpm == activity.getBPM());
     }
 
     /**
@@ -194,7 +197,7 @@ public abstract class Activity implements Serializable, Comparable {
         // Purposely fail with exception on wrong type
         Activity activity = (Activity) obj;
 
-        int dateCompare = this.executionDate.compareTo(activity.getExecutionDate());
+        int dateCompare     = this.executionDate.compareTo(activity.getExecutionDate());
         int durationCompare = this.executionTime.compareTo(activity.getExecutionTime());
         if (dateCompare != 0) {
             return dateCompare;

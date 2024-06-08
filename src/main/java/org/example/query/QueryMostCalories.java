@@ -30,7 +30,7 @@ public class QueryMostCalories extends QueryBetweenDates {
     /** Creates a new query without date restrictions. */
     public QueryMostCalories() {
         super();
-        this.maxUser = null;
+        this.maxUser     = null;
         this.maxCalories = -1;
     }
 
@@ -42,7 +42,7 @@ public class QueryMostCalories extends QueryBetweenDates {
      */
     public QueryMostCalories(LocalDateTime start, LocalDateTime end) {
         super(start, end);
-        this.maxUser = null;
+        this.maxUser     = null;
         this.maxCalories = -1;
     }
 
@@ -53,7 +53,7 @@ public class QueryMostCalories extends QueryBetweenDates {
      */
     public QueryMostCalories(QueryMostCalories query) {
         super(query);
-        this.maxUser = query.getMaxUser();
+        this.maxUser     = query.getMaxUser();
         this.maxCalories = query.getMaxCalories();
     }
 
@@ -64,8 +64,10 @@ public class QueryMostCalories extends QueryBetweenDates {
      *     provided.
      */
     public User getMaxUser() {
-        if (this.maxUser != null) return this.maxUser.clone();
-        else return null;
+        if (this.maxUser != null)
+            return this.maxUser.clone();
+        else
+            return null;
     }
 
     /**
@@ -84,15 +86,16 @@ public class QueryMostCalories extends QueryBetweenDates {
      * @param user User to be consumed.
      */
     public void accept(User user) {
-        double calories =
-                user.getActivities().getDone().stream()
-                        .filter(a -> this.activityFits(a))
-                        .mapToDouble(a -> a.countCalories(user))
-                        .sum();
+        double calories = user.getActivities()
+                              .getDone()
+                              .stream()
+                              .filter(a -> this.activityFits(a))
+                              .mapToDouble(a -> a.countCalories(user))
+                              .sum();
 
         if (calories > this.maxCalories) {
             this.maxCalories = calories;
-            this.maxUser = user.clone();
+            this.maxUser     = user.clone();
         }
     }
 
@@ -114,13 +117,14 @@ public class QueryMostCalories extends QueryBetweenDates {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         QueryMostCalories query = (QueryMostCalories) obj;
-        return super.equals(query)
-                && this.maxUser.equals(query.getMaxUser())
-                && this.maxCalories == query.getMaxCalories();
+        return super.equals(query) && this.maxUser.equals(query.getMaxUser()) &&
+            this.maxCalories == query.getMaxCalories();
     }
 
     /**
@@ -140,8 +144,8 @@ public class QueryMostCalories extends QueryBetweenDates {
      */
     @Override
     public String toString() {
-        return String.format(
-                "QueryMostCalories(start = \"%s\", end = \"%s\")",
-                this.getStart().toString(), this.getEnd().toString());
+        return String.format("QueryMostCalories(start = \"%s\", end = \"%s\")",
+                             this.getStart().toString(),
+                             this.getEnd().toString());
     }
 }

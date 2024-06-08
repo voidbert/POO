@@ -34,14 +34,12 @@ public class AdvancedUser extends User {
      * @param activities Activities the user must still execute and has already executed.
      * @throws UserException Non-positive <code>averageBPM</code>.
      */
-    public AdvancedUser(
-            long code,
-            String name,
-            String address,
-            String email,
-            int averageBPM,
-            UserActivities activities)
-            throws UserException {
+    public AdvancedUser(long           code,
+                        String         name,
+                        String         address,
+                        String         email,
+                        int            averageBPM,
+                        UserActivities activities) throws UserException {
         super(code, name, address, email, averageBPM, activities);
     }
 
@@ -67,12 +65,12 @@ public class AdvancedUser extends User {
     @Override
     public String toString() {
         return String.format(
-                "AdvancedUser(code = %d, name = \"%s\", address = \"%s\", email = \"%s\", averageBPM = %d, activities = %s)",
-                this.getCode(),
-                this.getName(),
-                this.getAddress(),
-                this.getEmail(),
-                this.getAverageBPM(),
-                this.getActivities().toString());
+            "AdvancedUser(code = %d, name = \"%s\", address = \"%s\", email = \"%s\", averageBPM = %d, activities = %s)",
+            this.getCode(),
+            this.getName(),
+            this.getAddress(),
+            this.getEmail(),
+            this.getAverageBPM(),
+            this.getActivities().toString());
     }
 }

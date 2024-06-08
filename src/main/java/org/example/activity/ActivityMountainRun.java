@@ -40,13 +40,11 @@ public class ActivityMountainRun extends ActivityAltimetryDistance {
      * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
      * @throws ActivityException <code>altimetry</code> not in [0.0; 1.0].
      */
-    public ActivityMountainRun(
-            Duration executionTime,
-            LocalDateTime executionDate,
-            int bpm,
-            double distanceToTraverse,
-            double altimetry)
-            throws ActivityException {
+    public ActivityMountainRun(Duration      executionTime,
+                               LocalDateTime executionDate,
+                               int           bpm,
+                               double        distanceToTraverse,
+                               double        altimetry) throws ActivityException {
 
         super(executionTime, executionDate, bpm, distanceToTraverse, altimetry);
     }
@@ -64,17 +62,17 @@ public class ActivityMountainRun extends ActivityAltimetryDistance {
     public double countCalories(User user) {
         double MET; /* Metabolic Equivalent of Task */
         double kmPerHour =
-                this.getDistanceToTraverse() / (this.getExecutionTime().toSeconds() / 3600.0);
+            this.getDistanceToTraverse() / (this.getExecutionTime().toSeconds() / 3600.0);
 
-        if (kmPerHour <= 7.24) MET = 10.3;
-        else if (kmPerHour <= 9.66) MET = 13.3;
-        else MET = 15.5;
+        if (kmPerHour <= 7.24)
+            MET = 10.3;
+        else if (kmPerHour <= 9.66)
+            MET = 13.3;
+        else
+            MET = 15.5;
 
-        return MET
-                * this.getBPM()
-                * (this.getExecutionTime().toSeconds() / 3600.0)
-                * (1.0 + this.getAltimetry())
-                * user.getCalorieMultiplier();
+        return MET * this.getBPM() * (this.getExecutionTime().toSeconds() / 3600.0) *
+            (1.0 + this.getAltimetry()) * user.getCalorieMultiplier();
     }
 
     @Override
@@ -90,11 +88,11 @@ public class ActivityMountainRun extends ActivityAltimetryDistance {
     @Override
     public String toString() {
         return String.format(
-                "ActivityMountainRun(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, distanceToTraverse = %.3f, altimetry = %.3f)",
-                this.getExecutionTime().toString(),
-                this.getExecutionDate().toString(),
-                this.getBPM(),
-                this.getDistanceToTraverse(),
-                this.getAltimetry());
+            "ActivityMountainRun(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, distanceToTraverse = %.3f, altimetry = %.3f)",
+            this.getExecutionTime().toString(),
+            this.getExecutionDate().toString(),
+            this.getBPM(),
+            this.getDistanceToTraverse(),
+            this.getAltimetry());
     }
 }

@@ -16,14 +16,15 @@
 
 package org.example.fitness;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.Test;
 
 public class ActivityDistanceTest {
     private ActivityDistance distance;
@@ -39,28 +40,19 @@ public class ActivityDistanceTest {
 
         try {
             clone.setDistanceToTraverse(14.5);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.distance);
 
         clone = this.distance.clone();
         try {
             clone.setBPM(100);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.distance);
     }
 
     @Test
     public void setDistanceToTraverse() {
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.distance.setDistanceToTraverse(-1.0);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.distance.setDistanceToTraverse(420.0);
-                });
+        assertThrows(ActivityException.class, () -> { this.distance.setDistanceToTraverse(-1.0); });
+        assertDoesNotThrow(() -> { this.distance.setDistanceToTraverse(420.0); });
     }
 }

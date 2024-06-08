@@ -16,21 +16,22 @@
 
 package org.example.fitness;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.Test;
 
 public class ActivityRepetitionWeightedTest {
     private ActivityRepetitionWeighted repetitionWeighted;
 
     public ActivityRepetitionWeightedTest() throws ActivityException {
         this.repetitionWeighted =
-                new ActivityWeightLifting(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15, 20);
+            new ActivityWeightLifting(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15, 20);
     }
 
     @Test
@@ -40,28 +41,20 @@ public class ActivityRepetitionWeightedTest {
 
         try {
             clone.setWeightsHeft(10);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.repetitionWeighted);
 
         clone = this.repetitionWeighted.clone();
         try {
             clone.setBPM(100);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.repetitionWeighted);
     }
 
     @Test
     public void setNumberOfReps() {
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.repetitionWeighted.setWeightsHeft(-1);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.repetitionWeighted.setWeightsHeft(40);
-                });
+        assertThrows(ActivityException.class,
+                     () -> { this.repetitionWeighted.setWeightsHeft(-1); });
+        assertDoesNotThrow(() -> { this.repetitionWeighted.setWeightsHeft(40); });
     }
 }

@@ -44,13 +44,11 @@ public abstract class ActivityAltimetryDistance extends ActivityDistance {
      * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
      * @throws ActivityException <code>altimetry</code> not in [0.0; 1.0].
      */
-    public ActivityAltimetryDistance(
-            Duration executionTime,
-            LocalDateTime executionDate,
-            int bpm,
-            double distanceToTraverse,
-            double altimetry)
-            throws ActivityException {
+    public ActivityAltimetryDistance(Duration      executionTime,
+                                     LocalDateTime executionDate,
+                                     int           bpm,
+                                     double        distanceToTraverse,
+                                     double        altimetry) throws ActivityException {
 
         super(executionTime, executionDate, bpm, distanceToTraverse);
         this.setAltimetry(altimetry);
@@ -97,8 +95,10 @@ public abstract class ActivityAltimetryDistance extends ActivityDistance {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || (this.getClass() != object.getClass())) return false;
+        if (this == object)
+            return true;
+        if (object == null || (this.getClass() != object.getClass()))
+            return false;
 
         ActivityAltimetryDistance activity = (ActivityAltimetryDistance) object;
         return super.equals(activity) && this.altimetry == activity.getAltimetry();

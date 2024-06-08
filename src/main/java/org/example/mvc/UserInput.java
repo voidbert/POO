@@ -53,18 +53,19 @@ public class UserInput {
      * @param convert Final conversion function.
      * @return The user's input.
      */
-    public Object read(
-            String prompt,
-            String error,
-            Predicate<String> validate,
-            Function<String, Object> convert) {
+    public Object read(String                   prompt,
+                       String                   error,
+                       Predicate<String>        validate,
+                       Function<String, Object> convert) {
 
         String ret = null;
         do {
             System.out.print(prompt);
             String line = scanner.nextLine();
-            if (validate.test(line)) ret = line;
-            else if (error != null) System.err.println(error);
+            if (validate.test(line))
+                ret = line;
+            else if (error != null)
+                System.err.println(error);
         } while (ret == null);
         return convert.apply(ret);
     }
@@ -100,19 +101,14 @@ public class UserInput {
      * @return The user's input.
      */
     public int readInt(String prompt, String error, Predicate<Integer> validate) {
-        return (Integer)
-                this.read(
-                        prompt,
-                        error,
-                        s -> {
-                            try {
-                                int i = Integer.parseInt(s);
-                                return validate.test(i);
-                            } catch (NumberFormatException e) {
-                                return false;
-                            }
-                        },
-                        s -> Integer.parseInt(s));
+        return (Integer) this.read(prompt, error, s -> {
+            try {
+                int i = Integer.parseInt(s);
+                return validate.test(i);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }, s -> Integer.parseInt(s));
     }
 
     /**
@@ -124,19 +120,14 @@ public class UserInput {
      * @return The user's input.
      */
     public double readDouble(String prompt, String error, Predicate<Double> validate) {
-        return (Double)
-                this.read(
-                        prompt,
-                        error,
-                        s -> {
-                            try {
-                                double d = Double.parseDouble(s);
-                                return validate.test(d);
-                            } catch (NumberFormatException e) {
-                                return false;
-                            }
-                        },
-                        s -> Double.parseDouble(s));
+        return (Double) this.read(prompt, error, s -> {
+            try {
+                double d = Double.parseDouble(s);
+                return validate.test(d);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }, s -> Double.parseDouble(s));
     }
 
     /**
@@ -147,10 +138,10 @@ public class UserInput {
      * @param validate Input validation predicate.
      * @return The user's input.
      */
-    public LocalDateTime readDate(
-            boolean readYMD, String error, Predicate<LocalDateTime> validate) {
-        LocalDateTime d = LocalDateTime.of(1, 1, 1, 0, 0, 0);
-        boolean success = false;
+    public LocalDateTime
+        readDate(boolean readYMD, String error, Predicate<LocalDateTime> validate) {
+        LocalDateTime d       = LocalDateTime.of(1, 1, 1, 0, 0, 0);
+        boolean       success = false;
         do {
             try {
                 if (readYMD) {
@@ -162,8 +153,10 @@ public class UserInput {
                 d = d.withHour(this.readInt("Hour > ", "Must be an integer!", h -> true));
                 d = d.withMinute(this.readInt("Minute > ", "Must be an integer!", m -> true));
 
-                if (validate.test(d)) success = true;
-                else System.err.println(error);
+                if (validate.test(d))
+                    success = true;
+                else
+                    System.err.println(error);
             } catch (DateTimeException e) {
                 System.err.println(error);
             }
@@ -189,8 +182,10 @@ public class UserInput {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
         return true; // Consider all scanners to be the same
     }
 

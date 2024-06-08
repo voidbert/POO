@@ -16,22 +16,22 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.SortedSet;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QueryMostActivitiesTest {
     @Test
     public void accept() throws UserException, ActivityException {
-        UserActivities activities = new UserActivities();
-        SortedSet<Activity> done = activities.getDone();
+        UserActivities      activities = new UserActivities();
+        SortedSet<Activity> done       = activities.getDone();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
         QueryMostActivities query =
-                new QueryMostActivities(
-                        LocalDateTime.MIN, LocalDateTime.of(2023, 12, 31, 23, 59, 59));
+            new QueryMostActivities(LocalDateTime.MIN, LocalDateTime.of(2023, 12, 31, 23, 59, 59));
 
         // 0
         assertEquals(query.getMaxUser(), null);
@@ -43,9 +43,10 @@ public class QueryMostActivitiesTest {
 
         // 2
         user.setCode(2);
-        done.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 1, 0, 0, 0), 100, 50));
+        done.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2023, 1, 1, 0, 0, 0),
+                                    100,
+                                    50));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -55,9 +56,10 @@ public class QueryMostActivitiesTest {
 
         // 3
         user.setCode(3);
-        done.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 2, 0, 0, 0), 100, 50));
+        done.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2023, 1, 2, 0, 0, 0),
+                                    100,
+                                    50));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -67,9 +69,10 @@ public class QueryMostActivitiesTest {
 
         // 4
         user.setCode(4);
-        done.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 1, 2, 0, 0, 0), 100, 50));
+        done.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2024, 1, 2, 0, 0, 0),
+                                    100,
+                                    50));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -90,7 +93,7 @@ public class QueryMostActivitiesTest {
     public void testToString() {
         LocalDateTime date = LocalDateTime.of(2030, 12, 25, 00, 00);
         assertEquals(
-                (new QueryMostActivities(date, date)).toString(),
-                "QueryMostActivities(start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
+            (new QueryMostActivities(date, date)).toString(),
+            "QueryMostActivities(start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
     }
 }

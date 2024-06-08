@@ -42,9 +42,10 @@ public abstract class ActivityDistance extends Activity {
      * @throws ActivityException <code>bpm</code> isn't positive.
      * @throws ActivityException <code>distanceToTraverse</code> isn't positive.
      */
-    public ActivityDistance(
-            Duration executionTime, LocalDateTime executionDate, int bpm, double distanceToTraverse)
-            throws ActivityException {
+    public ActivityDistance(Duration      executionTime,
+                            LocalDateTime executionDate,
+                            int           bpm,
+                            double        distanceToTraverse) throws ActivityException {
 
         super(executionTime, executionDate, bpm);
         this.setDistanceToTraverse(distanceToTraverse);
@@ -91,12 +92,14 @@ public abstract class ActivityDistance extends Activity {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || (this.getClass() != object.getClass())) return false;
+        if (this == object)
+            return true;
+        if (object == null || (this.getClass() != object.getClass()))
+            return false;
 
         ActivityDistance activity = (ActivityDistance) object;
-        return super.equals(activity)
-                && this.distanceToTraverse == activity.getDistanceToTraverse();
+        return super.equals(activity) &&
+            this.distanceToTraverse == activity.getDistanceToTraverse();
     }
 
     @Override

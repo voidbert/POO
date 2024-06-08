@@ -42,9 +42,10 @@ public abstract class ActivityRepetition extends Activity {
      * @throws ActivityException <code>bpm</code> isn't positive.
      * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
-    public ActivityRepetition(
-            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps)
-            throws ActivityException {
+    public ActivityRepetition(Duration      executionTime,
+                              LocalDateTime executionDate,
+                              int           bpm,
+                              int           numberOfReps) throws ActivityException {
 
         super(executionTime, executionDate, bpm);
         this.setNumberOfReps(numberOfReps);
@@ -91,8 +92,10 @@ public abstract class ActivityRepetition extends Activity {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || (this.getClass() != object.getClass())) return false;
+        if (this == object)
+            return true;
+        if (object == null || (this.getClass() != object.getClass()))
+            return false;
 
         ActivityRepetition activity = (ActivityRepetition) object;
         return super.equals(activity) && this.numberOfReps == activity.getNumberOfReps();

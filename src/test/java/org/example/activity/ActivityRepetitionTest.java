@@ -16,14 +16,15 @@
 
 package org.example.fitness;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.Test;
 
 public class ActivityRepetitionTest {
     private ActivityRepetition repetition;
@@ -39,28 +40,19 @@ public class ActivityRepetitionTest {
 
         try {
             clone.setNumberOfReps(40);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.repetition);
 
         clone = this.repetition.clone();
         try {
             clone.setBPM(100);
-        } catch (ActivityException e) {
-        }
+        } catch (ActivityException e) {}
         assertNotEquals(clone, this.repetition);
     }
 
     @Test
     public void setNumberOfReps() {
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.repetition.setNumberOfReps(-1);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.repetition.setNumberOfReps(101);
-                });
+        assertThrows(ActivityException.class, () -> { this.repetition.setNumberOfReps(-1); });
+        assertDoesNotThrow(() -> { this.repetition.setNumberOfReps(101); });
     }
 }

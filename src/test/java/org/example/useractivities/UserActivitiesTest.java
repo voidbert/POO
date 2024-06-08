@@ -16,12 +16,6 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -30,28 +24,39 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserActivitiesTest {
     private final UserActivities activities;
 
     public UserActivitiesTest() throws ActivityException, ActivityOverlapException {
         SortedSet<Activity> todo = new TreeSet<Activity>();
-        todo.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 5, 6, 11, 0, 0), 100, 20));
-        todo.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 5, 6, 11, 20, 0), 100, 20));
+        todo.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2024, 5, 6, 11, 0, 0),
+                                    100,
+                                    20));
+        todo.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2024, 5, 6, 11, 20, 0),
+                                    100,
+                                    20));
 
         TreeSet<DayOfWeek> planDays = new TreeSet<DayOfWeek>();
         planDays.add(DayOfWeek.FRIDAY);
 
         SortedMap<Activity, Integer> planActivities = new TreeMap<Activity, Integer>();
-        planActivities.put(
-                new ActivityMountainRun(
-                        Duration.ofMinutes(50), LocalDateTime.of(1, 1, 1, 8, 0, 0), 90, 8.0, 0.3),
-                1);
+        planActivities.put(new ActivityMountainRun(Duration.ofMinutes(50),
+                                                   LocalDateTime.of(1, 1, 1, 8, 0, 0),
+                                                   90,
+                                                   8.0,
+                                                   0.3),
+                           1);
         TrainingPlan plan = new TrainingPlan(planActivities, planDays);
 
         this.activities = new UserActivities(todo, new TreeSet<Activity>(), plan);
@@ -59,80 +64,58 @@ public class UserActivitiesTest {
 
     @Test
     public void addActivity() {
-        assertThrows(
-                ActivityOverlapException.class,
-                () -> {
-                    this.activities.addActivity(
-                            new ActivityPushUp(
-                                    Duration.ofMinutes(10),
-                                    LocalDateTime.of(2024, 5, 3, 8, 10, 0),
-                                    100,
-                                    20));
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.activities.addActivity(
-                            new ActivityPushUp(
-                                    Duration.ofMinutes(10),
-                                    LocalDateTime.of(2024, 5, 4, 8, 10, 0),
-                                    100,
-                                    20));
-                });
+        assertThrows(ActivityOverlapException.class, () -> {
+            this.activities.addActivity(new ActivityPushUp(Duration.ofMinutes(10),
+                                                           LocalDateTime.of(2024, 5, 3, 8, 10, 0),
+                                                           100,
+                                                           20));
+        });
+        assertDoesNotThrow(() -> {
+            this.activities.addActivity(new ActivityPushUp(Duration.ofMinutes(10),
+                                                           LocalDateTime.of(2024, 5, 4, 8, 10, 0),
+                                                           100,
+                                                           20));
+        });
     }
 
     @Test
     public void setTodo() throws ActivityException {
         SortedSet<Activity> todo = this.activities.getTodo();
-        assertDoesNotThrow(
-                () -> {
-                    this.activities.setTodo(todo);
-                });
+        assertDoesNotThrow(() -> { this.activities.setTodo(todo); });
 
-        todo.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 5, 6, 10, 59, 0), 100, 20));
-        assertThrows(
-                ActivityOverlapException.class,
-                () -> {
-                    this.activities.setTodo(todo);
-                });
+        todo.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2024, 5, 6, 10, 59, 0),
+                                    100,
+                                    20));
+        assertThrows(ActivityOverlapException.class, () -> { this.activities.setTodo(todo); });
     }
 
     @Test
     public void setTrainingPlan() throws ActivityException, ActivityOverlapException {
-        this.activities.addActivity(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 5, 9, 8, 10, 0), 100, 20));
+        this.activities.addActivity(new ActivityPushUp(Duration.ofMinutes(10),
+                                                       LocalDateTime.of(2024, 5, 9, 8, 10, 0),
+                                                       100,
+                                                       20));
 
         TrainingPlan plan = this.activities.getTrainingPlan();
-        assertDoesNotThrow(
-                () -> {
-                    this.activities.setTrainingPlan(plan);
-                });
+        assertDoesNotThrow(() -> { this.activities.setTrainingPlan(plan); });
 
         Set<DayOfWeek> days = plan.getRepetitions();
         days.add(DayOfWeek.THURSDAY);
         plan.setRepetitions(days);
-        assertThrows(
-                ActivityOverlapException.class,
-                () -> {
-                    this.activities.setTrainingPlan(plan);
-                });
+        assertThrows(ActivityOverlapException.class,
+                     () -> { this.activities.setTrainingPlan(plan); });
     }
 
     @Test
     public void removeActivity() throws ActivityDoesntExistException {
         this.activities.removeActivity(1);
-        assertEquals(
-                this.activities.getTodo().iterator().next().getExecutionDate(),
-                LocalDateTime.of(2024, 5, 6, 11, 0, 0));
+        assertEquals(this.activities.getTodo().iterator().next().getExecutionDate(),
+                     LocalDateTime.of(2024, 5, 6, 11, 0, 0));
         this.activities.removeActivity(0);
         assertTrue(this.activities.getTodo().isEmpty());
-        assertThrows(
-                ActivityDoesntExistException.class,
-                () -> {
-                    this.activities.removeActivity(0);
-                });
+        assertThrows(ActivityDoesntExistException.class,
+                     () -> { this.activities.removeActivity(0); });
     }
 
     @Test
@@ -168,13 +151,11 @@ public class UserActivitiesTest {
     public void testEquals() throws ActivityException, ActivityOverlapException {
         UserActivities copy = this.activities.clone();
         assertEquals(this.activities, copy);
-        copy.addActivity(
-                new ActivityMountainRun(
-                        Duration.ofMinutes(50),
-                        LocalDateTime.of(2024, 5, 7, 8, 0, 0),
-                        90,
-                        8.0,
-                        0.3));
+        copy.addActivity(new ActivityMountainRun(Duration.ofMinutes(50),
+                                                 LocalDateTime.of(2024, 5, 7, 8, 0, 0),
+                                                 90,
+                                                 8.0,
+                                                 0.3));
         assertNotEquals(this.activities, copy);
     }
 
@@ -188,11 +169,9 @@ public class UserActivitiesTest {
 
     @Test
     public void testToString() {
-        assertEquals(
-                (new UserActivities()).toString(),
-                String.format(
-                        "UserActivities(todo = [], done = [], plan = %s)",
-                        (new TrainingPlan()).toString()));
+        assertEquals((new UserActivities()).toString(),
+                     String.format("UserActivities(todo = [], done = [], plan = %s)",
+                                   (new TrainingPlan()).toString()));
     }
 
     @Test

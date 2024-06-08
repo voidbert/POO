@@ -56,7 +56,7 @@ public class UserActivities implements Serializable {
      *     plan</code>. No overlapping checks are performed on <code>done</code>.
      */
     public UserActivities(Set<Activity> todo, Set<Activity> done, TrainingPlan plan)
-            throws ActivityOverlapException {
+        throws ActivityOverlapException {
         this();
         this.setTodo(todo);
         this.setDone(done);
@@ -81,8 +81,8 @@ public class UserActivities implements Serializable {
      */
     public SortedSet<Activity> getTodo() {
         return this.todo.stream()
-                .map(Activity::clone)
-                .collect(Collectors.toCollection(TreeSet::new));
+            .map(Activity::clone)
+            .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -92,8 +92,8 @@ public class UserActivities implements Serializable {
      */
     public SortedSet<Activity> getDone() {
         return this.done.stream()
-                .map(Activity::clone)
-                .collect(Collectors.toCollection(TreeSet::new));
+            .map(Activity::clone)
+            .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -136,7 +136,7 @@ public class UserActivities implements Serializable {
      */
     public void setTodo(Set<Activity> todo) throws ActivityOverlapException {
         SortedSet<Activity> previous = this.getTodo();
-        this.todo = new TreeSet<Activity>();
+        this.todo                    = new TreeSet<Activity>();
 
         try {
             for (Activity a : todo) {
@@ -155,7 +155,7 @@ public class UserActivities implements Serializable {
      */
     public void setDone(Set<Activity> done) {
         this.done =
-                done.stream().map(Activity::clone).collect(Collectors.toCollection(TreeSet::new));
+            done.stream().map(Activity::clone).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -177,9 +177,9 @@ public class UserActivities implements Serializable {
      * @throws ActivityDoesntExistException <code>index</code> out of range.
      */
     public void removeActivity(int index) throws ActivityDoesntExistException {
-        boolean removed = false;
-        int count = 0;
-        Iterator<Activity> i = this.todo.iterator();
+        boolean            removed = false;
+        int                count   = 0;
+        Iterator<Activity> i       = this.todo.iterator();
         while (i.hasNext() && !removed) {
             Activity a = i.next();
             if (count == index) {
@@ -203,7 +203,7 @@ public class UserActivities implements Serializable {
     public void leapForward(LocalDateTime now, LocalDateTime goal) {
         Iterator<Activity> i = this.todo.iterator();
         while (i.hasNext()) {
-            Activity a = i.next();
+            Activity      a   = i.next();
             LocalDateTime end = a.getEndDate();
 
             if (end.isBefore(goal) || end.isEqual(goal)) {
@@ -232,13 +232,14 @@ public class UserActivities implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         UserActivities activities = (UserActivities) obj;
-        return this.todo.equals(activities.getTodo())
-                && this.done.equals(activities.getDone())
-                && this.plan.equals(activities.getTrainingPlan());
+        return this.todo.equals(activities.getTodo()) && this.done.equals(activities.getDone()) &&
+            this.plan.equals(activities.getTrainingPlan());
     }
 
     /**
@@ -258,8 +259,9 @@ public class UserActivities implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format(
-                "UserActivities(todo = %s, done = %s, plan = %s)",
-                this.todo.toString(), this.done.toString(), this.plan.toString());
+        return String.format("UserActivities(todo = %s, done = %s, plan = %s)",
+                             this.todo.toString(),
+                             this.done.toString(),
+                             this.plan.toString());
     }
 }
