@@ -16,24 +16,23 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.SortedSet;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QueryDistanceTest {
     @Test
     public void accept() throws UserException, ActivityException {
-        UserActivities activities = new UserActivities();
-        SortedSet<Activity> done = activities.getDone();
+        UserActivities      activities = new UserActivities();
+        SortedSet<Activity> done       = activities.getDone();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
-        QueryDistance query =
-                new QueryDistance(
-                        ActivityDistance.class,
-                        LocalDateTime.MIN,
-                        LocalDateTime.of(2023, 12, 31, 23, 59, 59));
+        QueryDistance query = new QueryDistance(ActivityDistance.class,
+                                                LocalDateTime.MIN,
+                                                LocalDateTime.of(2023, 12, 31, 23, 59, 59));
 
         // 0
         assertEquals(query.getDistance(), -1.0);
@@ -43,9 +42,11 @@ public class QueryDistanceTest {
         assertEquals(query.getDistance(), 0.0);
 
         // 2
-        done.add(
-                new ActivityMountainRun(
-                        Duration.ofMinutes(50), LocalDateTime.of(2023, 1, 1, 0, 0, 0), 100, 10, 1));
+        done.add(new ActivityMountainRun(Duration.ofMinutes(50),
+                                         LocalDateTime.of(2023, 1, 1, 0, 0, 0),
+                                         100,
+                                         10,
+                                         1));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -53,9 +54,10 @@ public class QueryDistanceTest {
         assertEquals(query.getDistance(), 10.0);
 
         // 3
-        done.add(
-                new ActivityTrackRun(
-                        Duration.ofMinutes(50), LocalDateTime.of(2023, 1, 2, 0, 0, 0), 100, 11));
+        done.add(new ActivityTrackRun(Duration.ofMinutes(50),
+                                      LocalDateTime.of(2023, 1, 2, 0, 0, 0),
+                                      100,
+                                      11));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -63,9 +65,10 @@ public class QueryDistanceTest {
         assertEquals(query.getDistance(), 21.0);
 
         // 4
-        done.add(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2024, 1, 2, 0, 0, 0), 100, 50));
+        done.add(new ActivityPushUp(Duration.ofMinutes(10),
+                                    LocalDateTime.of(2024, 1, 2, 0, 0, 0),
+                                    100,
+                                    50));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -73,9 +76,10 @@ public class QueryDistanceTest {
         assertEquals(query.getDistance(), 21.0);
 
         // 5
-        done.add(
-                new ActivityTrackRun(
-                        Duration.ofMinutes(50), LocalDateTime.of(2024, 1, 2, 0, 0, 0), 100, 11));
+        done.add(new ActivityTrackRun(Duration.ofMinutes(50),
+                                      LocalDateTime.of(2024, 1, 2, 0, 0, 0),
+                                      100,
+                                      11));
         activities.setDone(done);
         user.setActivities(activities);
 
@@ -84,10 +88,9 @@ public class QueryDistanceTest {
 
         // Activity restriction
         QueryDistance queryAltimetry =
-                new QueryDistance(
-                        ActivityAltimetryDistance.class,
-                        LocalDateTime.MIN,
-                        LocalDateTime.of(2023, 12, 31, 23, 59, 59));
+            new QueryDistance(ActivityAltimetryDistance.class,
+                              LocalDateTime.MIN,
+                              LocalDateTime.of(2023, 12, 31, 23, 59, 59));
         queryAltimetry.accept(user);
         assertEquals(queryAltimetry.getDistance(), 10.0);
 
@@ -101,7 +104,7 @@ public class QueryDistanceTest {
     public void testToString() {
         LocalDateTime date = LocalDateTime.of(2030, 12, 25, 00, 00);
         assertEquals(
-                (new QueryDistance(ActivityDistance.class, date, date)).toString(),
-                "QueryDistance(activityType = ActivityDistance, start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
+            (new QueryDistance(ActivityDistance.class, date, date)).toString(),
+            "QueryDistance(activityType = ActivityDistance, start = \"2030-12-25T00:00\", end = \"2030-12-25T00:00\")");
     }
 }

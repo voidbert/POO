@@ -16,22 +16,23 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.TreeSet;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QueryHardestTrainingPlanTest {
     @Test
     public void accept() throws UserException, ActivityException, ActivityOverlapException {
         UserActivities activities = new UserActivities();
-        TrainingPlan plan = activities.getTrainingPlan();
+        TrainingPlan   plan       = activities.getTrainingPlan();
         plan.setRepetitions(
-                new TreeSet<DayOfWeek>(Arrays.asList(new DayOfWeek[] {DayOfWeek.MONDAY})));
+            new TreeSet<DayOfWeek>(Arrays.asList(new DayOfWeek[] { DayOfWeek.MONDAY })));
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
         QueryHardestTrainingPlan query = new QueryHardestTrainingPlan();
 
@@ -44,10 +45,11 @@ public class QueryHardestTrainingPlanTest {
 
         // 2
         user.setCode(2);
-        plan.addActivity(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 1, 0, 0, 0), 100, 50),
-                1);
+        plan.addActivity(new ActivityPushUp(Duration.ofMinutes(10),
+                                            LocalDateTime.of(2023, 1, 1, 0, 0, 0),
+                                            100,
+                                            50),
+                         1);
         activities.setTrainingPlan(plan);
         user.setActivities(activities);
 
@@ -56,10 +58,11 @@ public class QueryHardestTrainingPlanTest {
 
         // 3
         user.setCode(3);
-        plan.addActivity(
-                new ActivityPushUp(
-                        Duration.ofMinutes(10), LocalDateTime.of(2023, 1, 2, 0, 10, 0), 100, 50),
-                1);
+        plan.addActivity(new ActivityPushUp(Duration.ofMinutes(10),
+                                            LocalDateTime.of(2023, 1, 2, 0, 10, 0),
+                                            100,
+                                            50),
+                         1);
         activities.setTrainingPlan(plan);
         user.setActivities(activities);
 

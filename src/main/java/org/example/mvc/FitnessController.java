@@ -66,21 +66,17 @@ public class FitnessController {
     public FitnessController() {
         this.model = new FitnessModel();
 
-        Class<?>[] userClasses = {BeginnerUser.class, IntermediateUser.class, AdvancedUser.class};
+        Class<?>[] userClasses = { BeginnerUser.class, IntermediateUser.class, AdvancedUser.class };
         this.userClasses =
-                Arrays.stream(userClasses)
-                        .collect(Collectors.toMap(c -> c.getSimpleName(), c -> c));
+            Arrays.stream(userClasses).collect(Collectors.toMap(c -> c.getSimpleName(), c -> c));
 
-        Class<?>[] activityClasses = {
-            ActivityDiamondPushUp.class,
-            ActivityMountainRun.class,
-            ActivityPushUp.class,
-            ActivityTrackRun.class,
-            ActivityWeightLifting.class
-        };
-        this.activityClasses =
-                Arrays.stream(activityClasses)
-                        .collect(Collectors.toMap(c -> c.getSimpleName(), c -> c));
+        Class<?>[] activityClasses = { ActivityDiamondPushUp.class,
+                                       ActivityMountainRun.class,
+                                       ActivityPushUp.class,
+                                       ActivityTrackRun.class,
+                                       ActivityWeightLifting.class };
+        this.activityClasses       = Arrays.stream(activityClasses)
+                                   .collect(Collectors.toMap(c -> c.getSimpleName(), c -> c));
 
         this.activityFields = new HashMap<String, SortedSet<ActivityExtraField>>();
         for (Class c : activityClasses) {
@@ -90,23 +86,21 @@ public class FitnessController {
                 fields.add(ActivityExtraField.REPETITIONS);
             if (ActivityRepetitionWeighted.class.isAssignableFrom(c))
                 fields.add(ActivityExtraField.WEIGHT);
-            if (ActivityDistance.class.isAssignableFrom(c)) fields.add(ActivityExtraField.DISTANCE);
+            if (ActivityDistance.class.isAssignableFrom(c))
+                fields.add(ActivityExtraField.DISTANCE);
             if (ActivityAltimetryDistance.class.isAssignableFrom(c))
                 fields.add(ActivityExtraField.ALTIMETRY);
 
             this.activityFields.put(c.getSimpleName(), fields);
         }
 
-        Class<?>[] queryClasses = {
-            QueryDistance.class,
-            QueryHardestTrainingPlan.class,
-            QueryMostActivities.class,
-            QueryMostCalories.class,
-            QueryMostCommonActivity.class
-        };
+        Class<?>[] queryClasses = { QueryDistance.class,
+                                    QueryHardestTrainingPlan.class,
+                                    QueryMostActivities.class,
+                                    QueryMostCalories.class,
+                                    QueryMostCommonActivity.class };
         this.queryClasses =
-                Arrays.stream(queryClasses)
-                        .collect(Collectors.toMap(c -> c.getSimpleName(), c -> c));
+            Arrays.stream(queryClasses).collect(Collectors.toMap(c -> c.getSimpleName(), c -> c));
     }
 
     /**
@@ -212,18 +206,17 @@ public class FitnessController {
      * @return A list of presented user field arrays (code, name, class, address, email and bpm).
      */
     public List<String[]> getUsers() {
-        return model.getUsers().values().stream()
-                .map(
-                        u ->
-                                new String[] {
-                                    Long.toString(u.getCode()),
-                                    u.getName(),
-                                    u.getClass().getSimpleName(),
-                                    u.getAddress(),
-                                    u.getEmail(),
-                                    Integer.toString(u.getAverageBPM())
-                                })
-                .collect(Collectors.toList());
+        return model.getUsers()
+            .values()
+            .stream()
+            .map(u
+                 -> new String[] { Long.toString(u.getCode()),
+                                   u.getName(),
+                                   u.getClass().getSimpleName(),
+                                   u.getAddress(),
+                                   u.getEmail(),
+                                   Integer.toString(u.getAverageBPM()) })
+            .collect(Collectors.toList());
     }
 
     /**
@@ -237,22 +230,19 @@ public class FitnessController {
     private List<String[]> showActivities(User user, SortedSet<Activity> activities) {
         List<String[]> ret = new ArrayList<String[]>();
         for (Activity a : activities) {
-            String[] fields =
-                    new String[] {
-                        a.getExecutionDate()
-                                .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
-                        Long.toString(a.getExecutionTime().toMinutes()),
-                        Double.toString(a.countCalories(user)),
-                        a.getClass().getSimpleName(),
-                        Integer.toString(a.getBPM()),
-                        "",
-                        "",
-                        "",
-                        ""
-                    };
+            String[] fields = new String[] { a.getExecutionDate().format(
+                                                 DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+                                             Long.toString(a.getExecutionTime().toMinutes()),
+                                             Double.toString(a.countCalories(user)),
+                                             a.getClass().getSimpleName(),
+                                             Integer.toString(a.getBPM()),
+                                             "",
+                                             "",
+                                             "",
+                                             "" };
 
             SortedSet<ActivityExtraField> extraFields =
-                    this.activityFields.get(a.getClass().getSimpleName());
+                this.activityFields.get(a.getClass().getSimpleName());
             if (extraFields.contains(ActivityExtraField.REPETITIONS))
                 fields[5] = Integer.toString(((ActivityRepetition) a).getNumberOfReps());
             if (extraFields.contains(ActivityExtraField.WEIGHT))
@@ -277,7 +267,8 @@ public class FitnessController {
      */
     public List<String[]> getTodoActivities(long userCode) throws FitnessControllerException {
         User user = this.model.getUser(userCode);
-        if (user == null) throw new FitnessControllerException("User doesn't exist!");
+        if (user == null)
+            throw new FitnessControllerException("User doesn't exist!");
         return this.showActivities(user, user.getActivities().getTodo());
     }
 
@@ -291,7 +282,8 @@ public class FitnessController {
      */
     public List<String[]> getDoneActivities(long userCode) throws FitnessControllerException {
         User user = this.model.getUser(userCode);
-        if (user == null) throw new FitnessControllerException("User doesn't exist!");
+        if (user == null)
+            throw new FitnessControllerException("User doesn't exist!");
         return this.showActivities(user, user.getActivities().getDone());
     }
 
@@ -303,9 +295,10 @@ public class FitnessController {
      * @return The days of the week a user executes their training plan.
      */
     public SortedSet<DayOfWeek> getTrainingPlanDays(long userCode)
-            throws FitnessControllerException {
+        throws FitnessControllerException {
         User user = this.model.getUser(userCode);
-        if (user == null) throw new FitnessControllerException("User doesn't exist!");
+        if (user == null)
+            throw new FitnessControllerException("User doesn't exist!");
         return user.getActivities().getTrainingPlan().getRepetitions();
     }
 
@@ -319,23 +312,23 @@ public class FitnessController {
      */
     public List<String[]> getPlanActivities(long userCode) throws FitnessControllerException {
         User user = this.model.getUser(userCode);
-        if (user == null) throw new FitnessControllerException("User doesn't exist!");
+        if (user == null)
+            throw new FitnessControllerException("User doesn't exist!");
 
-        List<String[]> ret = new ArrayList<String[]>();
+        List<String[]>         ret        = new ArrayList<String[]>();
         Map<Activity, Integer> activities = user.getActivities().getTrainingPlan().getActivities();
         for (Map.Entry<Activity, Integer> entry : activities.entrySet()) {
             SortedSet<Activity> single = new TreeSet<Activity>();
             single.add(entry.getKey());
 
-            List<String> fields =
-                    new ArrayList<String>(
-                            Arrays.asList(this.showActivities(user, single).iterator().next()));
+            List<String> fields = new ArrayList<String>(
+                Arrays.asList(this.showActivities(user, single).iterator().next()));
             fields.set(
-                    0,
-                    entry.getKey().getExecutionDate().format(DateTimeFormatter.ofPattern("HH:mm")));
+                0,
+                entry.getKey().getExecutionDate().format(DateTimeFormatter.ofPattern("HH:mm")));
             fields.add(3, Integer.toString(entry.getValue()));
             fields.set(2, Double.toString(Double.parseDouble(fields.get(2)) * entry.getValue()));
-            ret.add(fields.toArray(String[]::new));
+            ret.add(fields.toArray(String[] ::new));
         }
 
         return ret;
@@ -354,22 +347,18 @@ public class FitnessController {
      * @throws FitnessControllerException Error instantiating the new user.
      */
     public long addUser(String className, String name, String address, String email, int averageBPM)
-            throws FitnessControllerException {
+        throws FitnessControllerException {
 
         Class<?> userClass = this.userClasses.get(className);
         try {
-            Constructor<?> constructor =
-                    userClass.getConstructor(
-                            long.class,
-                            String.class,
-                            String.class,
-                            String.class,
-                            int.class,
-                            UserActivities.class);
-            User user =
-                    (User)
-                            constructor.newInstance(
-                                    1, name, address, email, averageBPM, new UserActivities());
+            Constructor<?> constructor = userClass.getConstructor(long.class,
+                                                                  String.class,
+                                                                  String.class,
+                                                                  String.class,
+                                                                  int.class,
+                                                                  UserActivities.class);
+            User           user        = (User) constructor
+                            .newInstance(1, name, address, email, averageBPM, new UserActivities());
             return this.model.addUser(user);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException e) {
             throw new FitnessControllerException(className + " missing crucial constructor!");
@@ -389,16 +378,15 @@ public class FitnessController {
      * @throws FitnessControllerException Error instantiating the new activity.
      * @return The created activity.
      */
-    private Activity constructActivity(
-            String className,
-            int duration,
-            LocalDateTime date,
-            SortedMap<ActivityExtraField, Object> fields)
-            throws FitnessControllerException {
+    private Activity constructActivity(String                                className,
+                                       int                                   duration,
+                                       LocalDateTime                         date,
+                                       SortedMap<ActivityExtraField, Object> fields)
+        throws FitnessControllerException {
 
-        Class<?> activityClass = this.activityClasses.get(className);
-        List<Object> arguments = new ArrayList<Object>();
-        List<Class> constructorArgumentTypes = new ArrayList<Class>();
+        Class<?>     activityClass            = this.activityClasses.get(className);
+        List<Object> arguments                = new ArrayList<Object>();
+        List<Class>  constructorArgumentTypes = new ArrayList<Class>();
 
         arguments.add(Duration.ofMinutes(duration));
         constructorArgumentTypes.add(Duration.class);
@@ -411,12 +399,13 @@ public class FitnessController {
             arguments.add(entry.getValue());
             if (entry.getKey() == ActivityExtraField.REPETITIONS)
                 constructorArgumentTypes.add(int.class);
-            else constructorArgumentTypes.add(double.class);
+            else
+                constructorArgumentTypes.add(double.class);
         }
 
         try {
             Constructor<?> constructor =
-                    activityClass.getConstructor(constructorArgumentTypes.toArray(Class[]::new));
+                activityClass.getConstructor(constructorArgumentTypes.toArray(Class[] ::new));
             return (Activity) constructor.newInstance(arguments.toArray());
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException e) {
             throw new FitnessControllerException(className + " missing crucial constructor!");
@@ -439,13 +428,12 @@ public class FitnessController {
      * @throws FitnessControllerException Activity starts before current date.
      * @throws FitnessControllerException Activity overlaps with existing activities.
      */
-    public void addActivity(
-            long userCode,
-            String className,
-            int duration,
-            LocalDateTime date,
-            SortedMap<ActivityExtraField, Object> fields)
-            throws FitnessControllerException {
+    public void addActivity(long                                  userCode,
+                            String                                className,
+                            int                                   duration,
+                            LocalDateTime                         date,
+                            SortedMap<ActivityExtraField, Object> fields)
+        throws FitnessControllerException {
 
         Activity activity = this.constructActivity(className, duration, date, fields);
         try {
@@ -470,14 +458,12 @@ public class FitnessController {
      * @throws FitnessControllerException User not found.
      * @throws FitnessControllerException Activity overlaps with existing activities.
      */
-    public void addActivityToTrainingPlan(
-            long userCode,
-            String className,
-            int duration,
-            LocalDateTime date,
-            SortedMap<ActivityExtraField, Object> fields,
-            int repetitions)
-            throws FitnessControllerException {
+    public void addActivityToTrainingPlan(long                                  userCode,
+                                          String                                className,
+                                          int                                   duration,
+                                          LocalDateTime                         date,
+                                          SortedMap<ActivityExtraField, Object> fields,
+                                          int repetitions) throws FitnessControllerException {
 
         Activity activity = this.constructActivity(className, duration, date, fields);
         try {
@@ -504,7 +490,7 @@ public class FitnessController {
      * @throws FitnessControllerException User doesn't exist.
      */
     public void setTrainingPlanDays(long userCode, SortedSet<DayOfWeek> days)
-            throws FitnessControllerException {
+        throws FitnessControllerException {
         try {
             this.model.setTrainingPlanDays(userCode, days);
         } catch (FitnessModelException | ActivityOverlapException e) {
@@ -532,17 +518,15 @@ public class FitnessController {
      * @throws FitnessControllerException User not found (QueryDistance only).
      * @return Textual output of the query.
      */
-    public String runQuery(
-            String className,
-            LocalDateTime start,
-            LocalDateTime end,
-            long userCode,
-            boolean altimetryOnly)
-            throws FitnessControllerException {
+    public String runQuery(String        className,
+                           LocalDateTime start,
+                           LocalDateTime end,
+                           long          userCode,
+                           boolean       altimetryOnly) throws FitnessControllerException {
 
         if (className.equals("QueryDistance")) {
             Class<? extends ActivityDistance> filterClass =
-                    altimetryOnly ? ActivityAltimetryDistance.class : ActivityDistance.class;
+                altimetryOnly ? ActivityAltimetryDistance.class : ActivityDistance.class;
             QueryDistance q = new QueryDistance(filterClass, start, end);
 
             try {
@@ -557,30 +541,35 @@ public class FitnessController {
             this.model.runQuery(q);
             User u = q.getMaxUser();
 
-            if (u == null) return "No users!";
+            if (u == null)
+                return "No users!";
             return String.format("(%d) %s - %f kcal", u.getCode(), u.getName(), q.getMaxCalories());
         } else if (className.equals("QueryMostActivities")) {
             QueryMostActivities q = new QueryMostActivities(start, end);
             this.model.runQuery(q);
             User u = q.getMaxUser();
 
-            if (u == null) return "No users!";
-            return String.format(
-                    "(%d) %s - %d completed activities",
-                    u.getCode(), u.getName(), q.getMaxActivities());
+            if (u == null)
+                return "No users!";
+            return String.format("(%d) %s - %d completed activities",
+                                 u.getCode(),
+                                 u.getName(),
+                                 q.getMaxActivities());
         } else if (className.equals("QueryMostCalories")) {
             QueryMostCalories q = new QueryMostCalories(start, end);
             this.model.runQuery(q);
             User u = q.getMaxUser();
 
-            if (u == null) return "No users!";
+            if (u == null)
+                return "No users!";
             return String.format("(%d) %s - %f kcal", u.getCode(), u.getName(), q.getMaxCalories());
         } else if (className.equals("QueryMostCommonActivity")) {
             QueryMostCommonActivity q = new QueryMostCommonActivity();
             this.model.runQuery(q);
             Map.Entry<String, Integer> activity = q.getTopActivity();
 
-            if (activity == null) return "No activities!";
+            if (activity == null)
+                return "No activities!";
             return String.format("%s - %d executions", activity.getKey(), activity.getValue());
         }
 
@@ -649,8 +638,10 @@ public class FitnessController {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         FitnessController fitness = (FitnessController) obj;
         return this.model.equals(fitness.getModel());

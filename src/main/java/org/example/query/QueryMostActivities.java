@@ -30,7 +30,7 @@ public class QueryMostActivities extends QueryBetweenDates {
     /** Creates a new query without date restrictions. */
     public QueryMostActivities() {
         super();
-        this.maxUser = null;
+        this.maxUser       = null;
         this.maxActivities = -1;
     }
 
@@ -42,7 +42,7 @@ public class QueryMostActivities extends QueryBetweenDates {
      */
     public QueryMostActivities(LocalDateTime start, LocalDateTime end) {
         super(start, end);
-        this.maxUser = null;
+        this.maxUser       = null;
         this.maxActivities = -1;
     }
 
@@ -53,7 +53,7 @@ public class QueryMostActivities extends QueryBetweenDates {
      */
     public QueryMostActivities(QueryMostActivities query) {
         super(query);
-        this.maxUser = query.getMaxUser();
+        this.maxUser       = query.getMaxUser();
         this.maxActivities = query.getMaxActivities();
     }
 
@@ -64,8 +64,10 @@ public class QueryMostActivities extends QueryBetweenDates {
      *     provided.
      */
     public User getMaxUser() {
-        if (this.maxUser != null) return this.maxUser.clone();
-        else return null;
+        if (this.maxUser != null)
+            return this.maxUser.clone();
+        else
+            return null;
     }
 
     /**
@@ -85,11 +87,11 @@ public class QueryMostActivities extends QueryBetweenDates {
      */
     public void accept(User user) {
         long activityCount =
-                user.getActivities().getDone().stream().filter(a -> this.activityFits(a)).count();
+            user.getActivities().getDone().stream().filter(a -> this.activityFits(a)).count();
 
         if (activityCount > this.maxActivities) {
             this.maxActivities = activityCount;
-            this.maxUser = user.clone();
+            this.maxUser       = user.clone();
         }
     }
 
@@ -111,13 +113,14 @@ public class QueryMostActivities extends QueryBetweenDates {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         QueryMostActivities query = (QueryMostActivities) obj;
-        return super.equals(query)
-                && this.maxUser.equals(query.getMaxUser())
-                && this.maxActivities == query.getMaxActivities();
+        return super.equals(query) && this.maxUser.equals(query.getMaxUser()) &&
+            this.maxActivities == query.getMaxActivities();
     }
 
     /**
@@ -137,8 +140,8 @@ public class QueryMostActivities extends QueryBetweenDates {
      */
     @Override
     public String toString() {
-        return String.format(
-                "QueryMostActivities(start = \"%s\", end = \"%s\")",
-                this.getStart().toString(), this.getEnd().toString());
+        return String.format("QueryMostActivities(start = \"%s\", end = \"%s\")",
+                             this.getStart().toString(),
+                             this.getEnd().toString());
     }
 }

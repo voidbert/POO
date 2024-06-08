@@ -16,19 +16,20 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QueryMostCommonActivityTest {
     @Test
     public void accept() throws UserException, ActivityException {
-        UserActivities activities = new UserActivities();
-        SortedSet<Activity> done = new TreeSet<Activity>();
+        UserActivities      activities = new UserActivities();
+        SortedSet<Activity> done       = new TreeSet<Activity>();
         User user = new BeginnerUser(1, "Eu", "Quarto", "123@abc.xyz", 100, new UserActivities());
         QueryMostCommonActivity query = new QueryMostCommonActivity();
 

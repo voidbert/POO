@@ -16,61 +16,46 @@
 
 package org.example.fitness;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import org.junit.jupiter.api.Test;
-
 public class ActivityTest {
     private Activity activity = new ActivityPushUp();
 
     @Test
     public void setBPM() {
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.activity.setBPM(0);
-                });
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.activity.setBPM(-1);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.activity.setBPM(60);
-                });
+        assertThrows(ActivityException.class, () -> { this.activity.setBPM(0); });
+        assertThrows(ActivityException.class, () -> { this.activity.setBPM(-1); });
+        assertDoesNotThrow(() -> { this.activity.setBPM(60); });
     }
 
     @Test
     public void setExecutionTime() {
-        assertThrows(
-                ActivityException.class,
-                () -> {
-                    this.activity.setExecutionTime(Duration.ofMillis(999));
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.activity.setExecutionTime(Duration.ofSeconds(1));
-                });
+        assertThrows(ActivityException.class,
+                     () -> { this.activity.setExecutionTime(Duration.ofMillis(999)); });
+        assertDoesNotThrow(() -> { this.activity.setExecutionTime(Duration.ofSeconds(1)); });
     }
 
     @Test
     public void overlaps() throws ActivityException {
         final Activity a1 =
-                new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 70, 15);
-        final Activity a2 =
-                new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 10), 70, 15);
-        final Activity a3 =
-                new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 20), 90, 15);
+            new ActivityPushUp(Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 70, 15);
+        final Activity a2 = new ActivityPushUp(Duration.ofMinutes(20),
+                                               LocalDateTime.of(2024, 5, 6, 10, 10),
+                                               70,
+                                               15);
+        final Activity a3 = new ActivityPushUp(Duration.ofMinutes(20),
+                                               LocalDateTime.of(2024, 5, 6, 10, 20),
+                                               90,
+                                               15);
 
         assertTrue(a1.overlaps(a1));
         assertTrue(a1.overlaps(a2));
@@ -84,13 +69,13 @@ public class ActivityTest {
     @Test
     public void testEquals() throws ActivityException {
         final Activity mountainRun =
-                new ActivityMountainRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20, 0.500);
+            new ActivityMountainRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20, 0.500);
         final Activity pushUp =
-                new ActivityPushUp(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15);
+            new ActivityPushUp(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15);
         final Activity trackRun =
-                new ActivityTrackRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20);
+            new ActivityTrackRun(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 20);
         final Activity weightLifting =
-                new ActivityWeightLifting(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15, 20);
+            new ActivityWeightLifting(Duration.ofMinutes(20), LocalDateTime.MIN, 69, 15, 20);
 
         assertNotEquals(mountainRun, pushUp);
         assertNotEquals(mountainRun, trackRun);
@@ -103,17 +88,19 @@ public class ActivityTest {
     @Test
     public void compareTo() throws ActivityException {
         final Activity a1 =
-                new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 70, 15);
-        final Activity a2 =
-                new ActivityPushUp(
-                        Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 10), 70, 15);
-        final Activity a3 =
-                new ActivityPushUp(
-                        Duration.ofMinutes(30), LocalDateTime.of(2024, 5, 6, 10, 10), 90, 15);
-        final Activity a4 =
-                new ActivityTrackRun(
-                        Duration.ofMinutes(30), LocalDateTime.of(2024, 5, 6, 10, 10), 90, 10.0);
+            new ActivityPushUp(Duration.ofMinutes(20), LocalDateTime.of(2024, 5, 6, 10, 0), 70, 15);
+        final Activity a2 = new ActivityPushUp(Duration.ofMinutes(20),
+                                               LocalDateTime.of(2024, 5, 6, 10, 10),
+                                               70,
+                                               15);
+        final Activity a3 = new ActivityPushUp(Duration.ofMinutes(30),
+                                               LocalDateTime.of(2024, 5, 6, 10, 10),
+                                               90,
+                                               15);
+        final Activity a4 = new ActivityTrackRun(Duration.ofMinutes(30),
+                                                 LocalDateTime.of(2024, 5, 6, 10, 10),
+                                                 90,
+                                                 10.0);
 
         assertTrue(a1.compareTo(a1) == 0);
         assertTrue(a1.compareTo(a2) < 0);

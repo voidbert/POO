@@ -16,28 +16,19 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.ByteArrayInputStream;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MenuTest {
     @Test
     public void run() {
-        int[] chosen = {-1}; // Array wrapper so that lambdas can modify this integer
-        MenuEntry[] entries = {
-            new MenuEntry(
-                    "Hello",
-                    (i) -> {
-                        chosen[0] = i;
-                    }),
-            new MenuEntry(
-                    "Goodbye",
-                    (i) -> {
-                        chosen[0] = i;
-                    })
-        };
-        Menu menu = new Menu(entries);
+        int[]       chosen  = { -1 }; // Array wrapper so that lambdas can modify this integer
+        MenuEntry[] entries = { new MenuEntry("Hello", (i) -> { chosen[0]   = i; }),
+                                new MenuEntry("Goodbye", (i) -> { chosen[0] = i; }) };
+        Menu        menu    = new Menu(entries);
 
         System.setIn(new ByteArrayInputStream("0\n1\n".getBytes()));
         menu.run();

@@ -24,9 +24,9 @@ public class Application {
      * @param args Application startup arguments.
      */
     public static void main(String[] args) {
-        FitnessModel model = new FitnessModel();
+        FitnessModel      model      = new FitnessModel();
         FitnessController controller = new FitnessController(model);
-        FitnessView view = new FitnessView(controller);
+        FitnessView       view       = new FitnessView(controller);
         view.run();
     }
 }

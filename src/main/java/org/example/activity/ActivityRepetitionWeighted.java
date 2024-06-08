@@ -44,13 +44,11 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
      * @throws ActivityException <code>numberOfReps</code> isn't positive.
      * @throws ActivityException <code>weightsHeft</code> isn't positive.
      */
-    public ActivityRepetitionWeighted(
-            Duration executionTime,
-            LocalDateTime executionDate,
-            int bpm,
-            int numberOfReps,
-            double weightsHeft)
-            throws ActivityException {
+    public ActivityRepetitionWeighted(Duration      executionTime,
+                                      LocalDateTime executionDate,
+                                      int           bpm,
+                                      int           numberOfReps,
+                                      double        weightsHeft) throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps);
         this.setWeightsHeft(weightsHeft);
@@ -82,7 +80,8 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
      * @throws ActivityException <code>weightsHeft</code> isn't positive.
      */
     public void setWeightsHeft(double weightsHeft) throws ActivityException {
-        if (weightsHeft <= 0) throw new ActivityException("Weights' heft should be positive!");
+        if (weightsHeft <= 0)
+            throw new ActivityException("Weights' heft should be positive!");
         this.weightsHeft = weightsHeft;
     }
 
@@ -96,8 +95,10 @@ public abstract class ActivityRepetitionWeighted extends ActivityRepetition {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || (this.getClass() != object.getClass())) return false;
+        if (this == object)
+            return true;
+        if (object == null || (this.getClass() != object.getClass()))
+            return false;
 
         ActivityRepetitionWeighted activity = (ActivityRepetitionWeighted) object;
         return super.equals(activity) && this.weightsHeft == activity.getWeightsHeft();

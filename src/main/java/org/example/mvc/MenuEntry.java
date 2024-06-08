@@ -29,7 +29,7 @@ public class MenuEntry {
 
     /** Creates a new empty menu entry. */
     public MenuEntry() {
-        this.text = "";
+        this.text    = "";
         this.handler = (i) -> {};
     }
 
@@ -40,7 +40,7 @@ public class MenuEntry {
      * @param handler Function to be executed when this entry is choosen.
      */
     public MenuEntry(String text, Consumer<Integer> handler) {
-        this.text = text;
+        this.text    = text;
         this.handler = handler;
     }
 
@@ -50,7 +50,7 @@ public class MenuEntry {
      * @param entry Menu entry to be copied.
      */
     public MenuEntry(MenuEntry entry) {
-        this.text = entry.getText();
+        this.text    = entry.getText();
         this.handler = entry.handler;
     }
 
@@ -108,8 +108,10 @@ public class MenuEntry {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         MenuEntry entry = (MenuEntry) obj;
         return this.text.equals(entry.getText()) && this.handler.equals(entry.getHandler());
@@ -132,7 +134,8 @@ public class MenuEntry {
      */
     @Override
     public String toString() {
-        return String.format(
-                "MenuEntry(text = \"%s\", handler = %s)", this.text, this.handler.toString());
+        return String.format("MenuEntry(text = \"%s\", handler = %s)",
+                             this.text,
+                             this.handler.toString());
     }
 }

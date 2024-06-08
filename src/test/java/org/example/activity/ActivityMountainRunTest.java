@@ -16,35 +16,32 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActivityMountainRunTest {
     private ActivityMountainRun mountainRun;
 
     public ActivityMountainRunTest() throws ActivityException {
-        this.mountainRun =
-                new ActivityMountainRun(
-                        Duration.ofMinutes(120),
-                        LocalDateTime.of(2030, 12, 25, 00, 00),
-                        69,
-                        20,
-                        0.8);
+        this.mountainRun = new ActivityMountainRun(Duration.ofMinutes(120),
+                                                   LocalDateTime.of(2030, 12, 25, 00, 00),
+                                                   69,
+                                                   20,
+                                                   0.8);
     }
 
     @Test
     public void countCalories() throws UserException {
-        final BeginnerUser beginner =
-                new BeginnerUser(
-                        1,
-                        "José Lopes",
-                        "UMinho",
-                        "a104541@alunos.uminho.pt",
-                        60,
-                        new UserActivities());
+        final BeginnerUser beginner = new BeginnerUser(1,
+                                                       "José Lopes",
+                                                       "UMinho",
+                                                       "a104541@alunos.uminho.pt",
+                                                       60,
+                                                       new UserActivities());
         assertEquals(this.mountainRun.countCalories(beginner), 3850.2, 0.1);
     }
 
@@ -61,8 +58,8 @@ public class ActivityMountainRunTest {
     @Test
     public void testToString() {
         assertEquals(
-                this.mountainRun.toString(),
-                "ActivityMountainRun(executionTime = \"PT2H\", executionDate = \"2030-12-25T00:00\", bpm = 69, distanceToTraverse = 20.000, altimetry = 0.800)");
+            this.mountainRun.toString(),
+            "ActivityMountainRun(executionTime = \"PT2H\", executionDate = \"2030-12-25T00:00\", bpm = 69, distanceToTraverse = 20.000, altimetry = 0.800)");
     }
 
     @Test

@@ -16,22 +16,20 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IntermediateUserTest {
     private User reference;
 
     public IntermediateUserTest() throws UserException {
-        this.reference =
-                new IntermediateUser(
-                        1,
-                        "Humberto Gomes",
-                        "UMinho",
-                        "a104348@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
+        this.reference = new IntermediateUser(1,
+                                              "Humberto Gomes",
+                                              "UMinho",
+                                              "a104348@alunos.uminho.pt",
+                                              80,
+                                              new UserActivities());
     }
 
     @Test
@@ -47,8 +45,8 @@ public class IntermediateUserTest {
     @Test
     public void testToString() {
         assertEquals(
-                this.reference.toString(),
-                "IntermediateUser(code = 1, name = \"Humberto Gomes\", address = \"UMinho\", email = \"a104348@alunos.uminho.pt\", averageBPM = 80, activities = UserActivities(todo = [], done = [], plan = TrainingPlan(activities = {}, repetitions = [])))");
+            this.reference.toString(),
+            "IntermediateUser(code = 1, name = \"Humberto Gomes\", address = \"UMinho\", email = \"a104348@alunos.uminho.pt\", averageBPM = 80, activities = UserActivities(todo = [], done = [], plan = TrainingPlan(activities = {}, repetitions = [])))");
     }
 
     @Test

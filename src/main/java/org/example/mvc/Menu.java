@@ -52,7 +52,7 @@ public class Menu {
      * @return This menu's entries.
      */
     public MenuEntry[] getEntries() {
-        return Arrays.stream(this.entries).map(MenuEntry::clone).toArray(MenuEntry[]::new);
+        return Arrays.stream(this.entries).map(MenuEntry::clone).toArray(MenuEntry[] ::new);
     }
 
     /**
@@ -61,7 +61,7 @@ public class Menu {
      * @param entries This menu's entries.
      */
     public void setEntries(MenuEntry[] entries) {
-        this.entries = Arrays.stream(entries).map(MenuEntry::clone).toArray(MenuEntry[]::new);
+        this.entries = Arrays.stream(entries).map(MenuEntry::clone).toArray(MenuEntry[] ::new);
     }
 
     /** Runs this menu. */
@@ -74,11 +74,10 @@ public class Menu {
         }
         System.out.println("");
 
-        int option =
-                input.readInt(
-                        "Option > ",
-                        String.format("Must be an integer betwewn 1 and %d!", this.entries.length),
-                        i -> i > 0 && i <= this.entries.length);
+        int option = input.readInt(
+            "Option > ",
+            String.format("Must be an integer betwewn 1 and %d!", this.entries.length),
+            i -> i > 0 && i <= this.entries.length);
         this.entries[option - 1].getHandler().accept(option - 1);
     }
 
@@ -100,8 +99,10 @@ public class Menu {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         Menu menu = (Menu) obj;
         return Arrays.equals(this.entries, menu.getEntries());

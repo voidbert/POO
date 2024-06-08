@@ -45,8 +45,8 @@ public class FitnessModel implements Serializable {
 
     /** Creates a new empty fitness application. */
     public FitnessModel() {
-        this.users = new TreeMap<Long, User>();
-        this.now = LocalDateTime.now();
+        this.users        = new TreeMap<Long, User>();
+        this.now          = LocalDateTime.now();
         this.nextUserCode = 1;
     }
 
@@ -58,7 +58,7 @@ public class FitnessModel implements Serializable {
      */
     public FitnessModel(Map<Long, User> users, LocalDateTime now) {
         this.setUsers(users);
-        this.now = now;
+        this.now          = now;
         this.nextUserCode = 1;
     }
 
@@ -68,8 +68,8 @@ public class FitnessModel implements Serializable {
      * @param fitness Fitness application to be copied.
      */
     public FitnessModel(FitnessModel fitness) {
-        this.users = fitness.getUsers();
-        this.now = fitness.getNow();
+        this.users        = fitness.getUsers();
+        this.now          = fitness.getNow();
         this.nextUserCode = fitness.getNextUserCode();
     }
 
@@ -79,13 +79,9 @@ public class FitnessModel implements Serializable {
      * @return The users (and their activities) in this fitness application.
      */
     public SortedMap<Long, User> getUsers() {
-        return this.users.entrySet().stream()
-                .collect(
-                        Collectors.toMap(
-                                e -> e.getKey(),
-                                e -> e.getValue().clone(),
-                                (o1, o2) -> o1,
-                                TreeMap::new));
+        return this.users.entrySet().stream().collect(
+            Collectors
+                .toMap(e -> e.getKey(), e -> e.getValue().clone(), (o1, o2) -> o1, TreeMap::new));
     }
 
     /**
@@ -96,8 +92,10 @@ public class FitnessModel implements Serializable {
      */
     public User getUser(long userCode) {
         User u = this.users.get(userCode);
-        if (u == null) return null;
-        else return u.clone();
+        if (u == null)
+            return null;
+        else
+            return u.clone();
     }
 
     /**
@@ -133,14 +131,9 @@ public class FitnessModel implements Serializable {
      * @param users The users (and their activities) in this fitness application.
      */
     public void setUsers(Map<Long, User> users) {
-        this.users =
-                users.entrySet().stream()
-                        .collect(
-                                Collectors.toMap(
-                                        e -> e.getKey(),
-                                        e -> e.getValue().clone(),
-                                        (o1, o2) -> o1,
-                                        TreeMap::new));
+        this.users = users.entrySet().stream().collect(
+            Collectors
+                .toMap(e -> e.getKey(), e -> e.getValue().clone(), (o1, o2) -> o1, TreeMap::new));
     }
 
     /**
@@ -166,12 +159,13 @@ public class FitnessModel implements Serializable {
      * @throws ActivityOverlapException Activity overlap.
      */
     public void setTrainingPlanDays(long userCode, SortedSet<DayOfWeek> days)
-            throws FitnessModelException, ActivityOverlapException {
+        throws FitnessModelException, ActivityOverlapException {
         User user = this.users.get(userCode);
-        if (user == null) throw new FitnessModelException("User does not exist!");
+        if (user == null)
+            throw new FitnessModelException("User does not exist!");
 
         UserActivities activities = user.getActivities();
-        TrainingPlan plan = activities.getTrainingPlan();
+        TrainingPlan   plan       = activities.getTrainingPlan();
         plan.setRepetitions(days);
         activities.setTrainingPlan(plan);
         user.setActivities(activities);
@@ -196,20 +190,20 @@ public class FitnessModel implements Serializable {
      * @throws ActivityOverlapException Activity overlaps with existing activities.
      */
     public void addActivity(long userCode, Activity activity)
-            throws FitnessModelException, ActivityOverlapException {
+        throws FitnessModelException, ActivityOverlapException {
 
         if (activity.getExecutionDate().isBefore(this.getNow()))
             throw new FitnessModelException("Activity added starts before current date!");
 
         User user = this.users.get(userCode);
-        if (user == null) throw new FitnessModelException("User does not exist!");
+        if (user == null)
+            throw new FitnessModelException("User does not exist!");
 
         UserActivities activities = user.getActivities();
-        Activity toAdd = activity.clone();
+        Activity       toAdd      = activity.clone();
         try {
             toAdd.setBPM(user.getAverageBPM());
-        } catch (ActivityException e) {
-        } // Can't happen
+        } catch (ActivityException e) {} // Can't happen
         activities.addActivity(toAdd);
         user.setActivities(activities);
     }
@@ -225,18 +219,18 @@ public class FitnessModel implements Serializable {
      * @throws ActivityOverlapException Activity overlaps with existing activities.
      */
     public void addActivityToTrainingPlan(long userCode, Activity activity, int times)
-            throws FitnessModelException, ActivityOverlapException {
+        throws FitnessModelException, ActivityOverlapException {
 
         User user = this.users.get(userCode);
-        if (user == null) throw new FitnessModelException("User does not exist!");
+        if (user == null)
+            throw new FitnessModelException("User does not exist!");
 
         UserActivities activities = user.getActivities();
-        TrainingPlan plan = activities.getTrainingPlan();
-        Activity toAdd = activity.clone();
+        TrainingPlan   plan       = activities.getTrainingPlan();
+        Activity       toAdd      = activity.clone();
         try {
             toAdd.setBPM(user.getAverageBPM());
-        } catch (ActivityException e) {
-        } // Can't happen
+        } catch (ActivityException e) {} // Can't happen
         plan.addActivity(toAdd, times);
         activities.setTrainingPlan(plan);
         user.setActivities(activities);
@@ -266,7 +260,8 @@ public class FitnessModel implements Serializable {
      * @param query Query to be run.
      */
     public void runQuery(Consumer<User> query) {
-        for (User u : this.users.values()) query.accept(u);
+        for (User u : this.users.values())
+            query.accept(u);
     }
 
     /**
@@ -278,7 +273,8 @@ public class FitnessModel implements Serializable {
      */
     public void runQuery(Consumer<User> query, long userCode) throws FitnessModelException {
         User user = this.users.get(userCode);
-        if (user == null) throw new FitnessModelException("User does not exist!");
+        if (user == null)
+            throw new FitnessModelException("User does not exist!");
         query.accept(user);
     }
 
@@ -291,14 +287,14 @@ public class FitnessModel implements Serializable {
      * @throws ClassCastException Bad file type.
      */
     public void loadFromFile(String path)
-            throws IOException, ClassNotFoundException, ClassCastException {
-        FileInputStream fileStream = new FileInputStream(path);
+        throws IOException, ClassNotFoundException, ClassCastException {
+        FileInputStream   fileStream   = new FileInputStream(path);
         ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-        FitnessModel fitness = (FitnessModel) objectStream.readObject();
+        FitnessModel      fitness      = (FitnessModel) objectStream.readObject();
         objectStream.close();
 
-        this.users = fitness.getUsers();
-        this.now = fitness.getNow();
+        this.users        = fitness.getUsers();
+        this.now          = fitness.getNow();
         this.nextUserCode = fitness.getNextUserCode();
     }
 
@@ -309,7 +305,7 @@ public class FitnessModel implements Serializable {
      * @throws IOException Failed to write to fail.
      */
     public void saveToFile(String path) throws IOException {
-        FileOutputStream fileStream = new FileOutputStream(path);
+        FileOutputStream   fileStream   = new FileOutputStream(path);
         ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
         objectStream.writeObject(this);
         objectStream.close();
@@ -324,13 +320,14 @@ public class FitnessModel implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         FitnessModel fitness = (FitnessModel) obj;
-        return this.users.equals(fitness.getUsers())
-                && this.now.equals(fitness.getNow())
-                && this.nextUserCode == fitness.getNextUserCode();
+        return this.users.equals(fitness.getUsers()) && this.now.equals(fitness.getNow()) &&
+            this.nextUserCode == fitness.getNextUserCode();
     }
 
     /**

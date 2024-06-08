@@ -16,27 +16,27 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class TestUtils {
     public static void serialize(Object obj) {
         try {
-            ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
+            ByteArrayOutputStream byteOutputStream   = new ByteArrayOutputStream();
+            ObjectOutputStream    objectOutputStream = new ObjectOutputStream(byteOutputStream);
             objectOutputStream.writeObject(obj);
             objectOutputStream.close();
             byteOutputStream.close();
 
-            byte bytes[] = byteOutputStream.toByteArray();
-            ByteArrayInputStream byteInputStream = new ByteArrayInputStream(bytes);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+            byte                 bytes[]           = byteOutputStream.toByteArray();
+            ByteArrayInputStream byteInputStream   = new ByteArrayInputStream(bytes);
+            ObjectInputStream    objectInputStream = new ObjectInputStream(byteInputStream);
 
             Object read = objectInputStream.readObject();
             assertEquals(read, obj);

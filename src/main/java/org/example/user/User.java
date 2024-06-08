@@ -42,7 +42,7 @@ public abstract class User implements Comparable, Serializable {
     public User() {
         this.code = 0;
         this.name = this.address = this.email = "";
-        this.averageBPM = 0;
+        this.averageBPM                       = 0;
     }
 
     /**
@@ -56,18 +56,16 @@ public abstract class User implements Comparable, Serializable {
      * @param activities Activities the user must still execute and has already executed.
      * @throws UserException Non-positive <code>averageBPM</code>.
      */
-    public User(
-            long code,
-            String name,
-            String address,
-            String email,
-            int averageBPM,
-            UserActivities activities)
-            throws UserException {
-        this.code = code;
-        this.name = name;
+    public User(long           code,
+                String         name,
+                String         address,
+                String         email,
+                int            averageBPM,
+                UserActivities activities) throws UserException {
+        this.code    = code;
+        this.name    = name;
         this.address = address;
-        this.email = email;
+        this.email   = email;
         this.setAverageBPM(averageBPM);
         this.activities = activities.clone();
     }
@@ -78,10 +76,10 @@ public abstract class User implements Comparable, Serializable {
      * @param user User to be copied.
      */
     public User(User user) {
-        this.code = user.getCode();
-        this.name = user.getName();
-        this.address = user.getAddress();
-        this.email = user.getEmail();
+        this.code       = user.getCode();
+        this.name       = user.getName();
+        this.address    = user.getAddress();
+        this.email      = user.getEmail();
         this.averageBPM = user.getAverageBPM();
         this.activities = user.getActivities();
     }
@@ -205,16 +203,15 @@ public abstract class User implements Comparable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || this.getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || this.getClass() != obj.getClass())
+            return false;
 
         User user = (User) obj;
-        return this.code == user.getCode()
-                && this.name.equals(user.getName())
-                && this.address.equals(user.getAddress())
-                && this.email.equals(user.getEmail())
-                && this.averageBPM == user.getAverageBPM()
-                && this.activities.equals(user.getActivities());
+        return this.code == user.getCode() && this.name.equals(user.getName()) &&
+            this.address.equals(user.getAddress()) && this.email.equals(user.getEmail()) &&
+            this.averageBPM == user.getAverageBPM() && this.activities.equals(user.getActivities());
     }
 
     /**

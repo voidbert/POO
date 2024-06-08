@@ -16,42 +16,37 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FitnessModelTest {
     private FitnessModel fitness;
 
     public FitnessModelTest() throws UserException {
-        User u1 =
-                new BeginnerUser(
-                        1,
-                        "Humberto Gomes",
-                        "UMinho",
-                        "a104348@alunos.uminho.pt",
-                        90,
-                        new UserActivities());
-        User u2 =
-                new IntermediateUser(
-                        2,
-                        "José Lopes",
-                        "UMinho",
-                        "a104541@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
-        User u3 =
-                new AdvancedUser(
-                        2,
-                        "Diogo Barros",
-                        "UMinho",
-                        "a10????@alunos.uminho.pt",
-                        95,
-                        new UserActivities());
+        User u1 = new BeginnerUser(1,
+                                   "Humberto Gomes",
+                                   "UMinho",
+                                   "a104348@alunos.uminho.pt",
+                                   90,
+                                   new UserActivities());
+        User u2 = new IntermediateUser(2,
+                                       "José Lopes",
+                                       "UMinho",
+                                       "a104541@alunos.uminho.pt",
+                                       80,
+                                       new UserActivities());
+        User u3 = new AdvancedUser(2,
+                                   "Diogo Barros",
+                                   "UMinho",
+                                   "a10????@alunos.uminho.pt",
+                                   95,
+                                   new UserActivities());
 
         Map<Long, User> users = new TreeMap<Long, User>();
         users.put(1L, u1);

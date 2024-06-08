@@ -16,54 +16,46 @@
 
 package org.example.fitness;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Test;
-
 public class UserTest {
     private User reference;
 
     public UserTest() throws UserException {
-        this.reference =
-                new IntermediateUser(
-                        1,
-                        "José Lopes",
-                        "UMinho",
-                        "a104541@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
+        this.reference = new IntermediateUser(1,
+                                              "José Lopes",
+                                              "UMinho",
+                                              "a104541@alunos.uminho.pt",
+                                              80,
+                                              new UserActivities());
     }
 
     @Test
     public void testEquals() throws UserException {
         // Test 1
-        final User beginner =
-                new BeginnerUser(
-                        1,
-                        "Humberto Gomes",
-                        "UMinho",
-                        "a104348@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
-        final User intermediate =
-                new IntermediateUser(
-                        1,
-                        "Humberto Gomes",
-                        "UMinho",
-                        "a104348@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
-        final User advanced =
-                new AdvancedUser(
-                        1,
-                        "Humberto Gomes",
-                        "UMinho",
-                        "a104348@alunos.uminho.pt",
-                        80,
-                        new UserActivities());
+        final User beginner     = new BeginnerUser(1,
+                                               "Humberto Gomes",
+                                               "UMinho",
+                                               "a104348@alunos.uminho.pt",
+                                               80,
+                                               new UserActivities());
+        final User intermediate = new IntermediateUser(1,
+                                                       "Humberto Gomes",
+                                                       "UMinho",
+                                                       "a104348@alunos.uminho.pt",
+                                                       80,
+                                                       new UserActivities());
+        final User advanced     = new AdvancedUser(1,
+                                               "Humberto Gomes",
+                                               "UMinho",
+                                               "a104348@alunos.uminho.pt",
+                                               80,
+                                               new UserActivities());
 
         assertNotEquals(beginner, intermediate);
         assertNotEquals(beginner, advanced);
@@ -92,19 +84,8 @@ public class UserTest {
 
     @Test
     public void setAverageBPM() {
-        assertThrows(
-                UserException.class,
-                () -> {
-                    this.reference.setAverageBPM(0);
-                });
-        assertThrows(
-                UserException.class,
-                () -> {
-                    this.reference.setAverageBPM(-1);
-                });
-        assertDoesNotThrow(
-                () -> {
-                    this.reference.setAverageBPM(60);
-                });
+        assertThrows(UserException.class, () -> { this.reference.setAverageBPM(0); });
+        assertThrows(UserException.class, () -> { this.reference.setAverageBPM(-1); });
+        assertDoesNotThrow(() -> { this.reference.setAverageBPM(60); });
     }
 }

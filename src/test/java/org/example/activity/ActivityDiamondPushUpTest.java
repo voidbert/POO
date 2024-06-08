@@ -16,31 +16,31 @@
 
 package org.example.fitness;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActivityDiamondPushUpTest {
     private ActivityDiamondPushUp pushUp;
 
     public ActivityDiamondPushUpTest() throws ActivityException {
-        this.pushUp =
-                new ActivityDiamondPushUp(
-                        Duration.ofMinutes(15), LocalDateTime.of(2030, 12, 25, 00, 00), 110, 70);
+        this.pushUp = new ActivityDiamondPushUp(Duration.ofMinutes(15),
+                                                LocalDateTime.of(2030, 12, 25, 00, 00),
+                                                110,
+                                                70);
     }
 
     @Test
     public void countCalories() throws UserException {
-        final AdvancedUser advanced =
-                new AdvancedUser(
-                        1,
-                        "José Lopes",
-                        "UMinho",
-                        "a104541@alunos.uminho.pt",
-                        50,
-                        new UserActivities());
+        final AdvancedUser advanced = new AdvancedUser(1,
+                                                       "José Lopes",
+                                                       "UMinho",
+                                                       "a104541@alunos.uminho.pt",
+                                                       50,
+                                                       new UserActivities());
         assertEquals(this.pushUp.countCalories(advanced), 371.3, 0.1);
     }
 
@@ -56,8 +56,8 @@ public class ActivityDiamondPushUpTest {
     @Test
     public void testToString() {
         assertEquals(
-                this.pushUp.toString(),
-                "ActivityDiamondPushUp(executionTime = \"PT15M\", executionDate = \"2030-12-25T00:00\", bpm = 110, numberOfReps = 70)");
+            this.pushUp.toString(),
+            "ActivityDiamondPushUp(executionTime = \"PT15M\", executionDate = \"2030-12-25T00:00\", bpm = 110, numberOfReps = 70)");
     }
 
     @Test

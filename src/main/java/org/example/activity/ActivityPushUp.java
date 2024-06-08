@@ -38,9 +38,10 @@ public class ActivityPushUp extends ActivityRepetition {
      * @throws ActivityException <code>bpm</code> isn't positive.
      * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
-    public ActivityPushUp(
-            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps)
-            throws ActivityException {
+    public ActivityPushUp(Duration      executionTime,
+                          LocalDateTime executionDate,
+                          int           bpm,
+                          int           numberOfReps) throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps);
     }
@@ -57,13 +58,13 @@ public class ActivityPushUp extends ActivityRepetition {
     @Override
     public double countCalories(User user) {
         double MET; /* Metabolic Equivalent of Task */
-        if (this.getNumberOfReps() <= 40) MET = 3.8;
-        else MET = 7.5;
+        if (this.getNumberOfReps() <= 40)
+            MET = 3.8;
+        else
+            MET = 7.5;
 
-        return MET
-                * this.getBPM()
-                * (this.getExecutionTime().toSeconds() / 3600.0)
-                * user.getCalorieMultiplier();
+        return MET * this.getBPM() * (this.getExecutionTime().toSeconds() / 3600.0) *
+            user.getCalorieMultiplier();
     }
 
     @Override
@@ -79,10 +80,10 @@ public class ActivityPushUp extends ActivityRepetition {
     @Override
     public String toString() {
         return String.format(
-                "ActivityPushUp(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d)",
-                this.getExecutionTime().toString(),
-                this.getExecutionDate().toString(),
-                this.getBPM(),
-                this.getNumberOfReps());
+            "ActivityPushUp(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d)",
+            this.getExecutionTime().toString(),
+            this.getExecutionDate().toString(),
+            this.getBPM(),
+            this.getNumberOfReps());
     }
 }

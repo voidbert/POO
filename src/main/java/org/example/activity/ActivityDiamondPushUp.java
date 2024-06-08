@@ -38,9 +38,10 @@ public class ActivityDiamondPushUp extends ActivityRepetition implements Activit
      * @throws ActivityException <code>bpm</code> isn't positive.
      * @throws ActivityException <code>numberOfReps</code> isn't positive.
      */
-    public ActivityDiamondPushUp(
-            Duration executionTime, LocalDateTime executionDate, int bpm, int numberOfReps)
-            throws ActivityException {
+    public ActivityDiamondPushUp(Duration      executionTime,
+                                 LocalDateTime executionDate,
+                                 int           bpm,
+                                 int           numberOfReps) throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps);
     }
@@ -57,13 +58,13 @@ public class ActivityDiamondPushUp extends ActivityRepetition implements Activit
     @Override
     public double countCalories(User user) {
         double MET; /* Metabolic Equivalent of Task */
-        if (this.getNumberOfReps() <= 40) MET = 4.5;
-        else MET = 9;
+        if (this.getNumberOfReps() <= 40)
+            MET = 4.5;
+        else
+            MET = 9;
 
-        return MET
-                * this.getBPM()
-                * (this.getExecutionTime().toSeconds() / 3600.0)
-                * user.getCalorieMultiplier();
+        return MET * this.getBPM() * (this.getExecutionTime().toSeconds() / 3600.0) *
+            user.getCalorieMultiplier();
     }
 
     @Override
@@ -79,10 +80,10 @@ public class ActivityDiamondPushUp extends ActivityRepetition implements Activit
     @Override
     public String toString() {
         return String.format(
-                "ActivityDiamondPushUp(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d)",
-                this.getExecutionTime().toString(),
-                this.getExecutionDate().toString(),
-                this.getBPM(),
-                this.getNumberOfReps());
+            "ActivityDiamondPushUp(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d)",
+            this.getExecutionTime().toString(),
+            this.getExecutionDate().toString(),
+            this.getBPM(),
+            this.getNumberOfReps());
     }
 }

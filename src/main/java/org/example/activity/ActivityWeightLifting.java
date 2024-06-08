@@ -40,13 +40,11 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted {
      * @throws ActivityException <code>numberOfReps</code> isn't positive.
      * @throws ActivityException <code>weightsHeft</code> isn't positive.
      */
-    public ActivityWeightLifting(
-            Duration executionTime,
-            LocalDateTime executionDate,
-            int bpm,
-            int numberOfReps,
-            double weightsHeft)
-            throws ActivityException {
+    public ActivityWeightLifting(Duration      executionTime,
+                                 LocalDateTime executionDate,
+                                 int           bpm,
+                                 int           numberOfReps,
+                                 double        weightsHeft) throws ActivityException {
 
         super(executionTime, executionDate, bpm, numberOfReps, weightsHeft);
     }
@@ -63,9 +61,12 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted {
     @Override
     public double countCalories(User user) {
         double MET; /* Metabolic Equivalent of Task */
-        if (this.getNumberOfReps() <= 15) MET = 3.5;
-        else if (this.getNumberOfReps() <= 30) MET = 5.0;
-        else MET = 6.0;
+        if (this.getNumberOfReps() <= 15)
+            MET = 3.5;
+        else if (this.getNumberOfReps() <= 30)
+            MET = 5.0;
+        else
+            MET = 6.0;
 
         return MET * this.getBPM() * (this.getWeightsHeft() / 200.0) * user.getCalorieMultiplier();
     }
@@ -83,11 +84,11 @@ public class ActivityWeightLifting extends ActivityRepetitionWeighted {
     @Override
     public String toString() {
         return String.format(
-                "ActivityWeightLifting(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d, weightsHeft = %.2f)",
-                this.getExecutionTime().toString(),
-                this.getExecutionDate().toString(),
-                this.getBPM(),
-                this.getNumberOfReps(),
-                this.getWeightsHeft());
+            "ActivityWeightLifting(executionTime = \"%s\", executionDate = \"%s\", bpm = %d, numberOfReps = %d, weightsHeft = %.2f)",
+            this.getExecutionTime().toString(),
+            this.getExecutionDate().toString(),
+            this.getBPM(),
+            this.getNumberOfReps(),
+            this.getWeightsHeft());
     }
 }

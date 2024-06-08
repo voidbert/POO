@@ -34,8 +34,8 @@ public class QueryDistance extends QueryBetweenDates {
     public QueryDistance() {
         super();
         this.activityType = ActivityDistance.class;
-        this.user = null;
-        this.distance = -1.0;
+        this.user         = null;
+        this.distance     = -1.0;
     }
 
     /**
@@ -47,8 +47,8 @@ public class QueryDistance extends QueryBetweenDates {
      */
     public QueryDistance(Class<? extends ActivityDistance> activityType) {
         this.activityType = activityType;
-        this.user = null;
-        this.distance = -1.0;
+        this.user         = null;
+        this.distance     = -1.0;
     }
 
     /**
@@ -59,14 +59,13 @@ public class QueryDistance extends QueryBetweenDates {
      * @param start Don't consider activities that ended before this date.
      * @param end Don't consider activities that ended after this date.
      */
-    public QueryDistance(
-            Class<? extends ActivityDistance> activityType,
-            LocalDateTime start,
-            LocalDateTime end) {
+    public QueryDistance(Class<? extends ActivityDistance> activityType,
+                         LocalDateTime                     start,
+                         LocalDateTime                     end) {
         super(start, end);
         this.activityType = activityType;
-        this.user = null;
-        this.distance = -1.0;
+        this.user         = null;
+        this.distance     = -1.0;
     }
 
     /**
@@ -77,8 +76,8 @@ public class QueryDistance extends QueryBetweenDates {
     public QueryDistance(QueryDistance query) {
         super(query);
         this.activityType = query.getActivityType();
-        this.user = query.getUser();
-        this.distance = query.getDistance();
+        this.user         = query.getUser();
+        this.distance     = query.getDistance();
     }
 
     /**
@@ -97,8 +96,10 @@ public class QueryDistance extends QueryBetweenDates {
      *     provided.
      */
     public User getUser() {
-        if (this.user != null) return this.user.clone();
-        else return null;
+        if (this.user != null)
+            return this.user.clone();
+        else
+            return null;
     }
 
     /**
@@ -128,12 +129,13 @@ public class QueryDistance extends QueryBetweenDates {
      */
     @Override
     public void accept(User user) {
-        this.user = user.clone();
-        this.distance =
-                user.getActivities().getDone().stream()
-                        .filter(a -> this.activityFits(a) && this.activityType.isInstance(a))
-                        .mapToDouble(a -> ((ActivityDistance) a).getDistanceToTraverse())
-                        .sum();
+        this.user     = user.clone();
+        this.distance = user.getActivities()
+                            .getDone()
+                            .stream()
+                            .filter(a -> this.activityFits(a) && this.activityType.isInstance(a))
+                            .mapToDouble(a -> ((ActivityDistance) a).getDistanceToTraverse())
+                            .sum();
     }
 
     /**
@@ -153,10 +155,9 @@ public class QueryDistance extends QueryBetweenDates {
      */
     @Override
     public String toString() {
-        return String.format(
-                "QueryDistance(activityType = %s, start = \"%s\", end = \"%s\")",
-                this.getActivityType().getSimpleName(),
-                this.getStart().toString(),
-                this.getEnd().toString());
+        return String.format("QueryDistance(activityType = %s, start = \"%s\", end = \"%s\")",
+                             this.getActivityType().getSimpleName(),
+                             this.getStart().toString(),
+                             this.getEnd().toString());
     }
 }

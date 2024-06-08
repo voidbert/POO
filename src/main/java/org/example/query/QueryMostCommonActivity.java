@@ -58,9 +58,10 @@ public class QueryMostCommonActivity implements Consumer<User> {
      *     May be <code>null</code> if no activities have been provided.
      */
     public Map.Entry<String, Integer> getTopActivity() {
-        if (this.activities.isEmpty()) return null;
+        if (this.activities.isEmpty())
+            return null;
         return new AbstractMap.SimpleEntry<String, Integer>(
-                Collections.max(this.activities.entrySet(), Map.Entry.comparingByValue()));
+            Collections.max(this.activities.entrySet(), Map.Entry.comparingByValue()));
     }
 
     /**
@@ -69,8 +70,8 @@ public class QueryMostCommonActivity implements Consumer<User> {
      * @param user User to be consumed.
      */
     public void accept(User user) {
-        int activityCount = 0;
-        Set<Activity> activities = user.getActivities().getDone();
+        int           activityCount = 0;
+        Set<Activity> activities    = user.getActivities().getDone();
         for (Activity activity : activities) {
             String name = activity.getClass().getSimpleName();
             this.activities.put(name, this.activities.getOrDefault(name, 0) + 1);
