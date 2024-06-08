@@ -17,9 +17,10 @@ jobs:
 
             - run: ./gradlew --no-daemon build
     format:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - uses: actions/checkout@v4
             # clang-format doesn't come with act's local images.
-            - run: if [ -n "$ACT" ]; then apt update && apt -y install clang-format; fi
+            - run: if [ -n "$ACT" ]; then apt update && apt -y install clang-format-17; fi
+            - run: clang-format-17 --version
             - run: ./format.sh --check

@@ -160,7 +160,7 @@ BreakBeforeInlineASMColon:         OnlyMultiline
 BreakBeforeTernaryOperators:       true
 BreakConstructorInitializers:      AfterColon
 BreakInheritanceList:              AfterColon
-BreakStringLiterals:               true
+BreakStringLiterals:               false
 EmptyLineAfterAccessModifier:      Never
 EmptyLineBeforeAccessModifier:     Always
 PackConstructorInitializers:       NextLine
