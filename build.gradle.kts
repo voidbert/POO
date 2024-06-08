@@ -1,6 +1,5 @@
 plugins {
     application
-    id("com.diffplug.spotless") version "6.25.0"
 }
 
 repositories {
@@ -22,12 +21,6 @@ java {
 
 application {
     mainClass = "org.example.fitness.Application"
-}
-
-spotless {
-    java {
-        googleJavaFormat().aosp()
-    }
 }
 
 tasks.test {
